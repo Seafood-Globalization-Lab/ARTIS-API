@@ -41,7 +41,9 @@ router.get('/', validateSchema(scinameSchemas.colReq), async (req, res) => {
         
         // Database response is an array of objects with a sciname key, flattening this to an array of strings
         let finalResult: IScinameColResponse = {
-            [colName]: dbResp.map((item: IScinameTblResult) => { return item[colName] })
+            [colName]: dbResp
+                        .map((item: IScinameTblResult) => { return item[colName] })
+                        .filter((item: string) => {return item.length > 0})
         }
 
         // returns results
