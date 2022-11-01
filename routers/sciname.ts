@@ -1,6 +1,8 @@
 
 import { Router } from 'express';
 import db from '../connections/connect';
+import scinameSchemas from '../schemas/sciname';
+import validateSchema from '../middleware/schemaValidator';
 
 const router = Router();
 
@@ -25,7 +27,7 @@ interface IScinameColResponse {
 }
 
 // GET all distinct values from the ARTIS sciname table for a particular column
-router.get('/', async (req, res) => {
+router.get('/', validateSchema(scinameSchemas.colReq), async (req, res) => {
 
     try {
         const colName: string = req.body.variable;
