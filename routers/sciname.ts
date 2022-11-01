@@ -1,6 +1,6 @@
 
 import { Router } from 'express';
-import db from '../connections/connect';
+import { db } from '../connections/connect';
 import scinameSchemas from '../schemas/sciname';
 import validateSchema from '../middleware/schemaValidator';
 
