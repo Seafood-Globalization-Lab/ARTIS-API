@@ -1,9 +1,11 @@
 
+// Modules
 import { Router } from 'express';
 import { db } from '../connections/connect';
 import scinameSchemas from '../schemas/sciname';
 import validateSchema from '../middleware/schemaValidator';
 
+// Router for scinames
 const router = Router();
 
 // Creates a SQL query for all values in a column
@@ -30,6 +32,7 @@ interface IScinameColResponse {
 router.get('/', validateSchema(scinameSchemas.colReq), async (req, res) => {
 
     try {
+        // sciname metadata column
         const colName: string = req.body.variable;
 
         // Requesting ARTIS database for a specific column
@@ -41,6 +44,7 @@ router.get('/', validateSchema(scinameSchemas.colReq), async (req, res) => {
             [colName]: dbResp.map((item: IScinameTblResult) => { return item[colName] })
         }
 
+        // returns results
         res.json(finalResult);
     }
     catch(e) {
