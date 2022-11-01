@@ -1,10 +1,5 @@
+import app from "./app";
 
-import express from 'express';
-import scinameRouter from './routers/sciname'
+const PORT: Number = 8000;
 
-const app = express();
-
-app.use(express.json());
-app.use('/sciname', scinameRouter);
-
-app.listen(8000, () => console.log('Server started'))
+app.listen(PORT, (): void => console.log(`running on port ${PORT}`));
