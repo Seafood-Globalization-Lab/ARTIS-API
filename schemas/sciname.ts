@@ -1,7 +1,7 @@
 
 // Modules
 import { NextFunction, Request, Response } from 'express';
-import { scinameCols } from '../connections/connect'
+import { scinameCols } from '../db/sciname'
 import Joi from 'joi';
 
 const Schemas = {
