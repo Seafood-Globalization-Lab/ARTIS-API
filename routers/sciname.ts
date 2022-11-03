@@ -14,10 +14,8 @@ router.get('/', validateSchema(scinameSchemas.colReq), async (req, res) => {
     try {
         // sciname metadata column
         const colName: string = req.body.variable;
-
         // Requesting ARTIS database for a specific column
         const finalResult = await sendScinameColQuery(colName);
-        
         // returns results
         res.json(finalResult);
     }
@@ -26,11 +24,15 @@ router.get('/', validateSchema(scinameSchemas.colReq), async (req, res) => {
     }
 })
 
+// GET specific columns and filter sciname metadata based on certain criteria
 router.get('/query', validateSchema(scinameSchemas.queryReq), async (req, res) => {
 
     try {
+        // Getting criteria from body
         const criteria: any = req.body;
+        // Sending sciname metadata request to ARTIS database
         const finalResult: any = await sendScinameQuery(criteria);
+        // Sending sciname metadata back
         res.json(finalResult);
     }
     catch(e) {
