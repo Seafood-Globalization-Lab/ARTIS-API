@@ -1,7 +1,7 @@
 
 // Modules
 import { Router } from 'express';
-import { sendScinameColQuery } from '../db';
+import { sendScinameColQuery, sendScinameQuery } from '../db';
 import scinameSchemas from '../schemas/sciname';
 import validateSchema from '../middleware/schemaValidator';
 
@@ -19,6 +19,18 @@ router.get('/', validateSchema(scinameSchemas.colReq), async (req, res) => {
         const finalResult = await sendScinameColQuery(colName);
         
         // returns results
+        res.json(finalResult);
+    }
+    catch(e) {
+        console.log(e);
+    }
+})
+
+router.get('/query', async (req, res) => {
+
+    try {
+        const criteria: any = req.body;
+        const finalResult: any = await sendScinameQuery(criteria);
         res.json(finalResult);
     }
     catch(e) {

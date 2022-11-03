@@ -31,29 +31,6 @@ interface IScinameCriteria {
     searchCriteria: IScinameSearchCriteria
 }
 
-// Creates SQL query string based on a specific set of criteria
-const createScinameQuery = (criteria: IScinameCriteria): string =>  {
-
-    let query = 'SELECT ' + criteria.colsWanted.join(', ');
-
-    // if there are filtering criteria
-    if (Object.keys(criteria.searchCriteria).length > 0) {
-        query = query + ' WHERE ';
-
-        for (const k of Object.keys(criteria.searchCriteria)) {
-            let currCriteria: string[] = criteria.searchCriteria[k].map((item: string): string => {
-                return `\'${item}\'`;
-            });
-
-            query = query + `${k} in (${currCriteria.join(', ')}) AND`
-        }
-
-        query = query.slice(query.length - 4);
-    }
-    query = query + ' FROM sciname';
-    return query;
-}
-
 // Makes an ARTIS DB request unique values from a specific column in sciname metadata
 export const sendScinameColQuery = async (colName: string) => {
     // Creating a SQL query string for dstinct values in sciname metadata column
@@ -61,7 +38,7 @@ export const sendScinameColQuery = async (colName: string) => {
 
     try {
         // sending SQL query to database
-        let resp = await sendQuery(query);
+        const resp = await sendQuery(query);
         // formating final response
         let finalResult: IScinameColResponse = {
             [colName]: resp
@@ -75,10 +52,38 @@ export const sendScinameColQuery = async (colName: string) => {
     }
 }
 
+// Creates SQL query string based on a specific set of criteria
+const createScinameQuery = (criteria: any): string =>  {
+
+    let query = 'SELECT ' + criteria.colsWanted.join(', ') + ' FROM sciname';
+
+    // if there are filtering criteria
+    if (Object.keys(criteria.searchCriteria).length > 0) {
+        query = query + ' WHERE ';
+        for (const k of Object.keys(criteria.searchCriteria)) {
+            let currCriteria: string[] = criteria.searchCriteria[k].map((item: string): string => {
+                return `\'${item}\'`;
+            });
+
+            query = query + `${k} in (${currCriteria.join(', ')}) AND`
+        }
+
+        query = query.slice(0, query.length - 4);
+    }
+
+    return query;
+}
+
 // Makes an ARTIS DB request for sciname metadata based on specific criteria
-export const sendScinameQuery = (scinameRequest: IScinameCriteria): any => {
+export const sendScinameQuery = async (scinameRequest: any) => {
     const query = createScinameQuery(scinameRequest);
-    return sendQuery(query);
+    try {
+        const resp = await sendQuery(query);
+        return resp;
+    }
+    catch(e) {
+        console.log(e);
+    }
 }
 
 // Sciname columns
