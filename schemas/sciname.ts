@@ -10,6 +10,11 @@ const Schemas = {
     Only contains a "variable" field which NEEDS to be a sciname metadata column name */
     colReq: Joi.object({
         variable: Joi.string().valid(...scinameCols).required()
+    }),
+
+    queryReq: Joi.object({
+        colsWanted: Joi.array().items(Joi.string().valid(...scinameCols)).required(),
+        searchCriteria: Joi.object().optional()
     })
 }
 

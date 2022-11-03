@@ -26,7 +26,7 @@ router.get('/', validateSchema(scinameSchemas.colReq), async (req, res) => {
     }
 })
 
-router.get('/query', async (req, res) => {
+router.get('/query', validateSchema(scinameSchemas.queryReq), async (req, res) => {
 
     try {
         const criteria: any = req.body;

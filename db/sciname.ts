@@ -58,7 +58,7 @@ const createScinameQuery = (criteria: any): string =>  {
     let query = 'SELECT ' + criteria.colsWanted.join(', ') + ' FROM sciname';
 
     // if there are filtering criteria
-    if (Object.keys(criteria.searchCriteria).length > 0) {
+    if ('searchCriteria' in criteria) {
         query = query + ' WHERE ';
         for (const k of Object.keys(criteria.searchCriteria)) {
             let currCriteria: string[] = criteria.searchCriteria[k].map((item: string): string => {
