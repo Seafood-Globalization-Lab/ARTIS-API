@@ -65,9 +65,10 @@ const createScinameQuery = (criteria: IScinameCriteria): string =>  {
                 return `\'${item}\'`;
             });
 
+            // follows format 'VARIABLE in (list of valid values)'
             query = query + `${k} in (${currCriteria.join(', ')}) AND `
         }
-
+        // remove last ' AND '
         query = query.slice(0, query.length - 5);
     }
 
