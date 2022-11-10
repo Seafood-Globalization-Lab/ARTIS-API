@@ -1,7 +1,7 @@
 
 // Modules
 import { Router } from 'express';
-import { sendScinameColQuery, sendScinameQuery } from '../db';
+import { sendMetadataColQuery, sendMetadataQuery } from '../db';
 import scinameSchemas from '../schemas/sciname';
 import validateSchema from '../middleware/schemaValidator';
 
@@ -15,7 +15,7 @@ router.get('/', validateSchema(scinameSchemas.colReq), async (req, res) => {
         // sciname metadata column
         const colName: string = req.body.variable;
         // Requesting ARTIS database for a specific column
-        const finalResult = await sendScinameColQuery(colName);
+        const finalResult = await sendMetadataColQuery('sciname', colName);
         // returns results
         res.json(finalResult);
     }
@@ -31,7 +31,7 @@ router.get('/query', validateSchema(scinameSchemas.queryReq), async (req, res) =
         // Getting criteria from body
         const criteria: any = req.body;
         // Sending sciname metadata request to ARTIS database
-        const finalResult: any = await sendScinameQuery(criteria);
+        const finalResult: any = await sendMetadataQuery('sciname', criteria);
         // Sending sciname metadata back
         res.json(finalResult);
     }
