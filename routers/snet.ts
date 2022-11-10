@@ -3,7 +3,7 @@
 import { Router } from 'express';
 import validateSchema from '../middleware/schemaValidator';
 import snetSchemas from '../schemas/snet';
-import { sendSnetQuery } from '../db/snet';
+import { sendSnetQuery } from '../db';
 
 const router = Router();
 
