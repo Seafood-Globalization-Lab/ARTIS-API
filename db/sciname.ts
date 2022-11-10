@@ -1,5 +1,5 @@
 
-import { sendQuery } from './connect_db'
+import { sendMetadataColQuery, sendQuery } from './connect_db'
 
 // Structure of Sciname Table Responses
 interface IScinameTblResult {
@@ -21,7 +21,7 @@ const createScinameColQuery = (colName: string): string => {
     return `SELECT DISTINCT ${colName} FROM sciname`;
 }
 
-type IScinameSearchCriteria = {
+interface IScinameSearchCriteria {
     [key: string]: string[]
 }
 
@@ -33,19 +33,9 @@ interface IScinameCriteria {
 
 // Makes an ARTIS DB request unique values from a specific column in sciname metadata
 export const sendScinameColQuery = async (colName: string) => {
-    // Creating a SQL query string for dstinct values in sciname metadata column
-    const query: string = createScinameColQuery(colName);
-
     try {
-        // sending SQL query to database
-        const resp = await sendQuery(query);
-        // formating final response
-        let finalResult: IScinameColResponse = {
-            [colName]: resp
-                    .map((item: IScinameTblResult) => { return item[colName]; })
-                    .filter((item: string) => {return item.length > 0; })
-        }
-        return finalResult;
+        const scinameResult = await sendMetadataColQuery('sciname', colName);
+        return scinameResult;
     }
     catch(e) {
         console.log(e);
