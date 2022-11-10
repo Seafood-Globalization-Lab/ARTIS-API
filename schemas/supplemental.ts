@@ -1,7 +1,7 @@
 
 // Modules
 import { NextFunction, Request, Response } from 'express';
-import { supplementalTables, scinameCols, countriesCols, productsCols, productionCols } from '../db'
+import { supplementalTables, scinameCols, countriesCols, productsCols, productionCols, baciCols } from '../db'
 import Joi from 'joi';
 
 const Schemas = {
@@ -23,6 +23,7 @@ const Schemas = {
                             .conditional('table', { is: 'countries', then: Joi.array().items(Joi.string().valid(...countriesCols)).required() })
                             .conditional('table', { is: 'products', then: Joi.array().items(Joi.string().valid(...productsCols)).required() })
                             .conditional('table', { is: 'production', then: Joi.array().items(Joi.string().valid(...productionCols)).required() })
+                            .conditional('table', { is: 'baci', then: Joi.array().items(Joi.string().valid(...baciCols)).required() })
                             .required(),
         // OPTIONAL: object where keys are sciname metadata column names, values are filtering criteria
         searchCriteria: Joi.object().optional()
