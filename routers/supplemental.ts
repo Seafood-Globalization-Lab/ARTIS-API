@@ -1,9 +1,10 @@
 
 // Modules
 import { Router } from 'express';
-import { sendMetadataColQuery, sendMetadataQuery } from '../db';
+import { IMetadataCriteria, sendMetadataColQuery, sendMetadataQuery } from '../db';
 import supplementalSchemas from '../schemas/supplemental';
 import validateSchema from '../middleware/schemaValidator';
+import { createRequire } from 'module';
 
 // Router for supplementals
 const router = Router();
@@ -31,10 +32,12 @@ router.get('/query', validateSchema(supplementalSchemas.queryReq), async (req, r
     try {
         // Getting criteria from body
         const tblName: string = req.body.table;
-        const criteria: any = {
+        let criteria: any = {
             colsWanted: req.body.colsWanted,
-            searchCriteria: req.body.searchCriteria
         };
+        if ('searchCriteria' in req.body) {
+            criteria['searchCriteria'] = req.body.searchCriteria;
+        }
         // Sending supplemental metadata request to ARTIS database
         const finalResult: any = await sendMetadataQuery(tblName, criteria);
         // Sending supplemental metadata back
