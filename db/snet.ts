@@ -70,3 +70,6 @@ export const snetCols: string[] = [
 ];
 
 export const snetWeightTypes: string[] = ['product_weight_t', 'live_weight_t'];
+export const snetHabitats: string[] = ['inland', 'marine'];
+export const snetMethods: string[] = ['capture', 'aquaculture'];
+export const snetExportSources: string[] = ['domestic export', 'foreign export']

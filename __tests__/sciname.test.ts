@@ -3,7 +3,7 @@ import request from "supertest";
 import app from "../app";
 
 // tests for endpoint /sciname
-describe("sciname metadata", () => {
+describe("metadata tables", () => {
 
     // GET requests tests
     describe('GET /', () => {
