@@ -19,7 +19,7 @@ interface IMetadataSearchCriteria {
 }
 
 // metadata request structure
-interface IMetadataCriteria {
+export interface IMetadataCriteria {
     colsWanted: string[]
     searchCriteria: IMetadataSearchCriteria
 }
@@ -31,6 +31,15 @@ interface IMetadataColResponse {
 
 const createColQuery = (tblName: string, colName: string): string => {
     return `SELECT DISTINCT ${colName} FROM ${tblName}`;
+}
+
+export const sendQuery = async (query: string) => {
+    try {
+        return await db.any(query);
+    }
+    catch(e) {
+        console.log(e);
+    }
 }
 
 export const sendMetadataColQuery = async (tblName: string, colName: string) => {
@@ -53,9 +62,32 @@ export const sendMetadataColQuery = async (tblName: string, colName: string) => 
     }
 }
 
-export const sendQuery = async (query: string) => {
+const createMetadataQuery = (tblName: string, criteria: IMetadataCriteria) => {
+    let query = 'SELECT ' + criteria.colsWanted.join(', ') + ` FROM ${tblName}`;
+
+    // if there are filtering criteria
+    if ('searchCriteria' in criteria) {
+        query = query + ' WHERE ';
+        for (const k of Object.keys(criteria.searchCriteria)) {
+            let currCriteria: string[] = criteria.searchCriteria[k].map((item: string): string => {
+                return `\'${item}\'`;
+            });
+
+            // follows format 'VARIABLE in (list of valid values)'
+            query = query + `${k} in (${currCriteria.join(', ')}) AND `
+        }
+        // remove last ' AND '
+        query = query.slice(0, query.length - 5);
+    }
+
+    return query;
+}
+
+export const sendMetadataQuery = async (tblName: string, criteria: IMetadataCriteria) => {
     try {
-        return await db.any(query);
+        const query: string = createMetadataQuery(tblName, criteria);
+        const resp = await sendQuery(query);
+        return resp;
     }
     catch(e) {
         console.log(e);
