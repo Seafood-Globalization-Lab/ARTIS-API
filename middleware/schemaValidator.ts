@@ -15,10 +15,10 @@ const validateSchema = (schema: ObjectSchema) => {
             // Passing to next function in pipeline
             next();
         }
-        catch(e) {
+        catch(e: any) {
             // REJECT request
             console.log(e);
-            return res.status(400).json({ e });
+            return res.status(400).json({ "message": e.details[0].message });
         }
     }
 };
