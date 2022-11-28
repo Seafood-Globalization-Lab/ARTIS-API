@@ -13,6 +13,7 @@ const Schemas = {
             exporter_iso3c: Joi.array().items(Joi.string().length(3).uppercase()).optional(),
             importer_iso3c: Joi.array().items(Joi.string().length(3).uppercase()).optional(),
             source_country_iso3c: Joi.array().items(Joi.string().length(3).uppercase()).optional(),
+            // needs to follow a 6 digit string
             hs6: Joi.array().items(Joi.string().length(6).regex(new RegExp(/\d+/))).optional(),
             sciname: Joi.array().items(Joi.string().regex(new RegExp(/[^[a-zA-Z\s]+/))).optional(),
             habitat: Joi.array().items(Joi.string().valid(...snetHabitats)).optional(),

@@ -40,6 +40,38 @@ describe("supplemental tables", () => {
           });
 
           /* needs to:
+          - return a 200 status code
+          - return a filtered query for sciname table
+          - example: all thunnus in sciname table
+          */
+         it("should return filtered query", async () => {
+          const tableVar: string = "sciname";
+          const outputCols: string[] = ["sciname", "common_name", "isscaap", "genus"];
+          const outSearch: any = {
+            "genus": ["thunnus"]
+          };
+
+          const res = await request(app).get("/supplemental/query").send({
+            "table": tableVar,
+            "colsWanted": outputCols,
+            "searchCriteria": outSearch
+          });
+
+          expect(res.status).toBe(200);
+          expect(res.body.length).toBeGreaterThan(0);
+
+          res.body.forEach((elem: any) => {
+            
+            // Check element structure
+            expect(Object.keys(elem).length).toEqual(outputCols.length);
+            expect(Object.keys(elem).sort()).toEqual(outputCols.sort());
+
+            // Check that responses agree with search criteria
+            expect(elem["genus"]).toBe("thunnus");
+          });
+         });
+
+          /* needs to:
            - return a 400 status code */ 
           it("should error when request is malformed", async() => {
             const scinameVar = 'sciname';

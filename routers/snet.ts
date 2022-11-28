@@ -12,7 +12,6 @@ router.get('/query', validateSchema(snetSchemas.queryReq), async (req, res) => {
     try {
         // Columns and data for filtering
         const criteria = req.body;
-        console.log(criteria);
         // Sending request to ARTIS database
         const finalResult = await sendSnetQuery(criteria);
         // Sending response back
