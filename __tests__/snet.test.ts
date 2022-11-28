@@ -55,9 +55,21 @@ describe("snet table", () => {
                 expect(elem["exporter_iso3c"]).toEqual(expect.stringMatching(exportersRegExp));
                 
             });
+        });
 
-
-          });
+        /* needs to:
+           - return a 400 status code */ 
+        it("should error when request is malformed", async() => {
+            const scinameVar = 'sciname';
+            const res = await request(app).get("/snet/query").send({
+                 colsWanted: ["exporter_iso3c", "year"],
+                 weightType: "live_wgt",
+                 searchCriteria: {
+                    year: [2017, 2019]
+                 }
+            });
+            expect(res.status).toBe(400);
+        });
 
     });
 });

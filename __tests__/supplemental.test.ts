@@ -42,7 +42,7 @@ describe("supplemental tables", () => {
           /* needs to:
           - return a 200 status code
           - return a filtered query for sciname table
-          - example: all thunnus in sciname table
+          - example: all thunnus in
           */
          it("should return filtered query", async () => {
           const tableVar: string = "sciname";
