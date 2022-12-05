@@ -51,3 +51,58 @@ This is section outline how to make requests for any of the supplemental data ta
 - production
 - products
 - sciname
+
+You can make 2 kinds of requests for data in supplemental tables:
+1. Getting all the unique values for a specific table. These requests are made to the url: ```/supplemental/```
+    - This type of request has two REQUIRED parameters:
+        - table: A string corresponding to the name of the supplemental table you want information from.
+        - variable: A string corresponding to the name of the column. Will return all unique values in this column.
+2. Getting all rows based on a filtered search criteria. These requests are made to the url: ```/supplemental/query/```
+    - This type of the request has the uses the following parameters:
+        - table **(REQUIRED)**: A string corresponding to the name of the supplemental table you want information from.
+        - colsWanted **(REQUIRED)**: A list of strings corresponding to the columns that will be returned for each row.
+        - searchCriteria *(Optional)*: An object with key value pairs that is used to filter the ARTIS snet data down to a desired output. The keys need to be the column names of the specific supplemental table being requested from. All keys should have a list of strings denoting which values you want to keep in your output.
+
+### Examples
+
+If you wanted to get all scientific names for all the species / species groups in ARTIS:
+```json
+{
+    "table": "sciname",
+    "variable": "sciname"
+}
+```
+
+If you wanted to get all common names for all the species / species groups in ARTIS:
+```json
+{
+    "table": "sciname",
+    "variable": "common_name"
+}
+```
+
+If you wanted to get all scientific, common names and ISSCAAP groups for a specific genus (for example thunnus):
+```json
+{
+    "table": "sciname",
+    "colsWanted": ["sciname", "common_name", "isscaap"],
+    "searchCriteria": {
+        "genus": ["thunnus"]
+    }
+}
+```
+
+If you wanted to get production of all USA and Chilean salmo salar by production method and year:
+```json
+{
+    "table": "production",
+    "colsWanted": ["iso3c", "method", "year", "live_weight_t"],
+    "searchCriteria": {
+        "sciname": ["salmo salar"],
+        "iso3c": ["USA", "CHL"]
+    }
+}
+```
+
+
+
