@@ -19,6 +19,28 @@ const createSnetQuery = (criteria: ISnetCriteria): string => {
     // initial 
     let query = `SELECT ${criteria.colsWanted.join(', ')}, SUM(${criteria.weightType}) AS ${criteria.weightType} FROM snet`;
 
+    // LEFT JOIN if there are any columns that are NOT IN snet
+    let missingCols: string[] = [];
+    criteria.colsWanted.forEach((val) => {
+        if (!snetSet.has(val)) {
+            missingCols.push(val);
+        }
+    })
+
+    if (missingCols.length > 0) {
+        query = query + ` a LEFT JOIN (SELECT sciname, `
+        missingCols.forEach((val) => {
+            query = query + `${val}, `
+        })
+
+        query = query.slice(0, query.length - 2);
+        query = query + ' FROM sciname) b ON a.sciname = b.sciname '
+    }
+
+    console.log("missing cols query:")
+    console.log(query);
+
+
     // if there are filtering criteria
     if ('searchCriteria' in criteria) {
         query = query + ' WHERE ';
@@ -47,6 +69,8 @@ const createSnetQuery = (criteria: ISnetCriteria): string => {
 
     // group weight values by columns requested
     query = query + `GROUP BY ${criteria.colsWanted.join(', ')}`;
+    console.log("end query")
+    console.log(query)
     return query;
 }
 
@@ -68,6 +92,8 @@ export const snetCols: string[] = [
     'exporter_iso3c', 'importer_iso3c', 'source_country_iso3c',
     'hs6', 'sciname', 'method', 'habitat', 'dom_source', 'year'
 ];
+
+const snetSet = new Set(snetCols);
 
 export const snetWeightTypes: string[] = ['product_weight_t', 'live_weight_t'];
 export const snetHabitats: string[] = ['inland', 'marine'];
