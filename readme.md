@@ -11,7 +11,7 @@ Food systems have become increasingly globalized, with over a quarter of all foo
 ---
 
 ## Description Files
-The files below contain the documentation for what types of requests (including examples and sample responses) can be made to the ARTIS API.
+The files below contain the documentation for what types of requests (examples and sample responses) can be made to the ARTIS API.
 
 - table_outlines.md
     - Formats and structures for all tables accessible from the ARTIS API
