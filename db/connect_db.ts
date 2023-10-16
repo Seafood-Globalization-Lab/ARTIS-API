@@ -4,11 +4,32 @@ const config = require('config');
 const pgp = require('pg-promise')();
 const dotenv = require('dotenv').config();
 
-console.log(dotenv['parsed']);
-
 // log in data for ARTIS data base connection
 //const cn = config.get('artis_db_cn');
-const cn = dotenv['parsed'];
+let ssl = null;
+if (process.env.NODE_ENV === 'development') {
+    ssl = {rejectUnauthorized: false};
+
+    const cn = {
+        "host": process.env.DB_HOST,
+        "user": process.env.DB_USER,
+        "port": process.env.DB_PORT,
+        "password": process.env.DB_PASSWORD,
+        "database": process.env.DB_NAME,
+        'ssl': ssl
+    };
+}
+
+if (process.env.NODE_ENV === 'production') {
+    const cn = {
+        connectionString: process.env.DATABASE_URL,
+        max: 30,
+        ssl: ssl
+    };
+}
+
+
+
 // Connecting to database
 const db = pgp(cn);
 
