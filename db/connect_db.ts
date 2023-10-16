@@ -30,7 +30,8 @@ if (process.env.NODE_ENV === 'production') {
     };
 }
 
-
+console.log("testing here cn");
+console.log(cn);
 
 // Connecting to database
 const db = pgp(cn);
