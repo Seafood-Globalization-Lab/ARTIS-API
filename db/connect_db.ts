@@ -7,10 +7,12 @@ const dotenv = require('dotenv').config();
 // log in data for ARTIS data base connection
 //const cn = config.get('artis_db_cn');
 let ssl = null;
+let cn = null;
+
 if (process.env.NODE_ENV === 'development') {
     ssl = {rejectUnauthorized: false};
 
-    const cn = {
+    cn = {
         "host": process.env.DB_HOST,
         "user": process.env.DB_USER,
         "port": process.env.DB_PORT,
@@ -21,7 +23,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 if (process.env.NODE_ENV === 'production') {
-    const cn = {
+    cn = {
         connectionString: process.env.DATABASE_URL,
         max: 30,
         ssl: ssl
