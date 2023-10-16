@@ -20,13 +20,21 @@ const createSnetQuery = (criteria: ISnetCriteria): string => {
     let query = `SELECT ${criteria.colsWanted.join(', ')}, SUM(${criteria.weightType}) AS ${criteria.weightType} FROM snet`;
 
     // LEFT JOIN if there are any columns that are NOT IN snet
+
+    // Finding all columns in query that are not in the snet table
     let missingCols: string[] = [];
+    let missingCols2 = {
+        "sciname": [],
+        "products": [],
+        "country": []
+    };
     criteria.colsWanted.forEach((val) => {
         if (!snetSet.has(val)) {
             missingCols.push(val);
         }
     })
 
+    // adding left join statement for missing columns
     if (missingCols.length > 0) {
         query = query + ` a LEFT JOIN (SELECT sciname, `
         missingCols.forEach((val) => {
@@ -68,7 +76,7 @@ const createSnetQuery = (criteria: ISnetCriteria): string => {
     }
 
     // group weight values by columns requested
-    query = query + `GROUP BY ${criteria.colsWanted.join(', ')}`;
+    query = query + ` GROUP BY ${criteria.colsWanted.join(', ')}`;
     console.log("end query")
     console.log(query)
     return query;
