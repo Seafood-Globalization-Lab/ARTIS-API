@@ -2,9 +2,13 @@
 // Modules
 const config = require('config');
 const pgp = require('pg-promise')();
+const dotenv = require('dotenv').config();
+
+console.log(dotenv['parsed']);
 
 // log in data for ARTIS data base connection
-const cn = config.get('artis_db_cn');
+//const cn = config.get('artis_db_cn');
+const cn = dotenv['parsed'];
 // Connecting to database
 const db = pgp(cn);
 
