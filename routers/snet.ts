@@ -1,7 +1,7 @@
 
 // Modules
 import { Router } from 'express';
-import validateSchema from '../middleware/schemaValidator';
+import { validateSchema } from '../middleware/schemaValidator';
 import snetSchemas from '../schemas/snet';
 import { sendSnetQuery } from '../db';
 

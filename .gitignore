@@ -4,3 +4,5 @@ config/
 jest.config.js
 coverage/
 .DS_Store
+.env
+dist/

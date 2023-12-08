@@ -3,19 +3,20 @@
 import { Router } from 'express';
 import { IMetadataCriteria, sendMetadataColQuery, sendMetadataQuery } from '../db';
 import supplementalSchemas from '../schemas/supplemental';
-import validateSchema from '../middleware/schemaValidator';
+import { validateQuerySchema } from '../middleware/schemaValidator';
 import { createRequire } from 'module';
 
 // Router for supplementals
 const router = Router();
 
 // GET all distinct values from the ARTIS supplemental table for a particular column
-router.get('/', validateSchema(supplementalSchemas.colReq), async (req, res) => {
+router.get('/', validateQuerySchema(supplementalSchemas.colReq), async (req, res) => {
 
     try {
+
         // supplemental metadata column
-        const tblName: string = req.body.table;
-        const colName: string = req.body.variable;
+        const tblName = req.query.table;
+        const colName = req.query.variable;
         // Requesting ARTIS database for a specific column
         const finalResult = await sendMetadataColQuery(tblName, colName);
         // returns results
@@ -27,16 +28,28 @@ router.get('/', validateSchema(supplementalSchemas.colReq), async (req, res) => 
 })
 
 // GET specific columns and filter supplemental metadata based on certain criteria
-router.get('/query', validateSchema(supplementalSchemas.queryReq), async (req, res) => {
+router.get('/query', async (req, res) => {
 
     try {
         // Getting criteria from body
-        const tblName: string = req.body.table;
+        const tblName: string = String(req.query.table);
         let criteria: any = {
-            colsWanted: req.body.colsWanted,
+            colsWanted: String(req.query.colsWanted).split(","),
         };
-        if ('searchCriteria' in req.body) {
-            criteria['searchCriteria'] = req.body.searchCriteria;
+
+        const filteredSearch: Number = parseInt(String(req.query.searchCriteria));
+        const baseParams: String[] = ["table", "colsWanted", "searchCriteria"];
+
+        if (filteredSearch === 1) {
+
+            criteria['searchCriteria'] = {};
+
+            Object.entries(req.query).forEach(([key, value]) => {
+                // only parse non base parameters for filtering criteria
+                if (!baseParams.includes(key)) {
+                    criteria['searchCriteria'][key] = String(value).split(",")
+                }
+            })
         }
         // Sending supplemental metadata request to ARTIS database
         const finalResult: any = await sendMetadataQuery(tblName, criteria);

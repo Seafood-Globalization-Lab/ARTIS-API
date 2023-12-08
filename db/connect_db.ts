@@ -15,8 +15,7 @@ if (process.env.NODE_ENV === 'development') {
         "user": process.env.DB_USER,
         "port": process.env.DB_PORT,
         "password": process.env.DB_PASSWORD,
-        "database": process.env.DB_NAME,
-        'ssl': ssl
+        "database": process.env.DB_NAME
     };
 }
 
@@ -28,7 +27,6 @@ if (process.env.NODE_ENV === 'production') {
     };
 }
 
-console.log("testing here cn");
 console.log(cn);
 
 // Connecting to database
@@ -68,7 +66,7 @@ export const sendQuery = async (query: string) => {
     }
 }
 
-export const sendMetadataColQuery = async (tblName: string, colName: string) => {
+export const sendMetadataColQuery = async (tblName, colName) => {
     // Creating a SQL query string for dstinct values in sciname metadata column
     const query: string = createColQuery(tblName, colName);
 
