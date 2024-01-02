@@ -45,10 +45,6 @@ const createSnetQuery = (criteria: ISnetCriteria): string => {
         query = query + ' FROM sciname) b ON a.sciname = b.sciname '
     }
 
-    console.log("missing cols query:")
-    console.log(query);
-
-
     // if there are filtering criteria
     if ('searchCriteria' in criteria) {
         query = query + ' WHERE ';
@@ -77,8 +73,7 @@ const createSnetQuery = (criteria: ISnetCriteria): string => {
 
     // group weight values by columns requested
     query = query + ` GROUP BY ${criteria.colsWanted.join(', ')}`;
-    console.log("end query")
-    console.log(query)
+
     return query;
 }
 
@@ -92,7 +87,7 @@ export const sendSnetQuery = async (criteria: ISnetCriteria) => {
         return resp;
     }
     catch(e) {
-        console.log(e);
+        throw new Error(e);
     }
 }
 

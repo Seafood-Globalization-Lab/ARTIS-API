@@ -1,6 +1,6 @@
 
 // Modules
-const config = require('config');
+// const config = require('config');
 const pgp = require('pg-promise')();
 const dotenv = require('dotenv').config();
 
@@ -9,7 +9,7 @@ const dotenv = require('dotenv').config();
 const ssl = {rejectUnauthorized: false};
 let cn = null;
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV == 'test') {
     cn = {
         "host": process.env.DB_HOST,
         "user": process.env.DB_USER,
@@ -26,8 +26,6 @@ if (process.env.NODE_ENV === 'production') {
         ssl: ssl
     };
 }
-
-console.log(cn);
 
 // Connecting to database
 const db = pgp(cn);
@@ -54,6 +52,7 @@ interface IMetadataColResponse {
 }
 
 const createColQuery = (tblName: string, colName: string): string => {
+    if (colName === "order") { colName = '"' + colName + '"'; }
     return `SELECT DISTINCT ${colName} FROM ${tblName}`;
 }
 
@@ -62,7 +61,7 @@ export const sendQuery = async (query: string) => {
         return await db.any(query);
     }
     catch(e) {
-        console.log(e);
+        throw new Error(e);
     }
 }
 
@@ -73,16 +72,17 @@ export const sendMetadataColQuery = async (tblName, colName) => {
     try {
         // sending SQL query to database
         const resp = await sendQuery(query);
+
         // formating final response
         let finalResult: IMetadataColResponse = {
             [colName]: resp
                     .map((item: IMetadataColResponse) => { return item[colName]; })
-                    .filter((item: string) => {return item.length > 0; })
+                    .filter((item: string) => {return item && item.length > 0; })
         }
         return finalResult;
     }
     catch(e) {
-        console.log(e);
+        throw new Error(e);
     }
 }
 
@@ -114,6 +114,6 @@ export const sendMetadataQuery = async (tblName: string, criteria: IMetadataCrit
         return resp;
     }
     catch(e) {
-        console.log(e);
+        throw new Error(e);
     }
 }

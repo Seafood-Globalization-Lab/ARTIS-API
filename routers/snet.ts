@@ -45,7 +45,7 @@ router.get('/query', async (req, res) => {
         res.json(finalResult);
     }
     catch(e) {
-        console.log(e);
+        res.sendStatus(500);
     }
 })
 
