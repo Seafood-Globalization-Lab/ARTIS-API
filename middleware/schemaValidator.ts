@@ -17,7 +17,6 @@ export const validateQuerySchema = (schema: ObjectSchema) => {
         }
         catch(e: any) {
             // REJECT request
-            console.log(e);
             return res.status(400).json({ "message": e.details[0].message });
         }
     }
@@ -35,7 +34,6 @@ export const validateSchema = (schema: ObjectSchema) => {
         }
         catch(e: any) {
             // REJECT request
-            console.log(e);
             return res.status(400).json({ "message": e.details[0].message });
         }
     }

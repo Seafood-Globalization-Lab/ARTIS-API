@@ -28,7 +28,7 @@ router.get('/', validateQuerySchema(supplementalSchemas.colReq), async (req, res
 })
 
 // GET specific columns and filter supplemental metadata based on certain criteria
-router.get('/query', async (req, res) => {
+router.get('/query', validateQuerySchema(supplementalSchemas.queryReq), async (req, res) => {
 
     try {
         // Getting criteria from body

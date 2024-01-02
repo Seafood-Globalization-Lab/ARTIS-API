@@ -1,14 +1,14 @@
 
 // Modules
 import { Router } from 'express';
-import { validateSchema } from '../middleware/schemaValidator';
+import { validateQuerySchema } from '../middleware/schemaValidator';
 import snetSchemas from '../schemas/snet';
 import { sendSnetQuery } from '../db';
 
 const router = Router();
 
 // Getting snet data: specific columns and filter based on specific criteria
-router.get('/query', async (req, res) => {
+router.get('/query', validateQuerySchema(snetSchemas.queryReq), async (req, res) => {
     try {
         const colsWanted: string[] = String(req.query.colsWanted).split(",");
         const weightType: string = String(req.query.weightType);
