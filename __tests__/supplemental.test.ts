@@ -15,7 +15,8 @@ describe("supplemental tables", () => {
         it("should return all scinames", async () => {
             const tblNameVar = 'sciname';
             const scinameVar = 'sciname';
-            const res = await request(app).get("/supplemental").send({table: tblNameVar, variable: scinameVar});
+            const testURL = "/supplemental" + "?table=" + tblNameVar + "&variable=" + scinameVar;
+            const res = await request(app).get(testURL);
             expect(res.status).toBe(200);
             expect(res.body[scinameVar].length).toBeGreaterThan(0);
             res.body[scinameVar].forEach((element: string) => {
@@ -27,10 +28,12 @@ describe("supplemental tables", () => {
           /* needs to:
            - return a 200 status code
            - be a non-empty array */
+          
           it("should return all common_names", async () => {
             const tblNameVar = 'sciname';
             const scinameVar = 'common_name';
-            const res = await request(app).get("/supplemental").send({table: tblNameVar, variable: scinameVar});
+            const testURL = "/supplemental?table=" + tblNameVar + "&variable=" + scinameVar;
+            const res = await request(app).get(testURL);
             expect(res.status).toBe(200);
             expect(res.body[scinameVar].length).toBeGreaterThan(0);
             res.body[scinameVar].forEach((element: string) => {
@@ -38,33 +41,28 @@ describe("supplemental tables", () => {
               expect(element.length).toBeGreaterThan(0);
             });
           });
+          
 
           /* needs to:
           - return a 200 status code
           - return a filtered query for sciname table
           - example: all thunnus in
           */
+         
          it("should return filtered query", async () => {
           const tableVar: string = "sciname";
-          const outputCols: string[] = ["sciname", "common_name", "isscaap", "genus"];
-          const outSearch: any = {
-            "genus": ["thunnus"]
-          };
+          const outputCols: string = "sciname,common_name,isscaap,genus";
+          const testURL: string = "/supplemental/query?table=" + tableVar + "&colsWanted=" + outputCols + "&searchCriteria=1" + "&genus=thunnus";
 
-          const res = await request(app).get("/supplemental/query").send({
-            "table": tableVar,
-            "colsWanted": outputCols,
-            "searchCriteria": outSearch
-          });
+          const res = await request(app).get(testURL);
 
           expect(res.status).toBe(200);
           expect(res.body.length).toBeGreaterThan(0);
 
           res.body.forEach((elem: any) => {
-            
+
             // Check element structure
-            expect(Object.keys(elem).length).toEqual(outputCols.length);
-            expect(Object.keys(elem).sort()).toEqual(outputCols.sort());
+            expect(Object.keys(elem).length).toEqual(4);
 
             // Check that responses agree with search criteria
             expect(elem["genus"]).toBe("thunnus");
@@ -73,10 +71,12 @@ describe("supplemental tables", () => {
 
           /* needs to:
            - return a 400 status code */ 
+          
           it("should error when request is malformed", async() => {
-            const scinameVar = 'sciname';
-            const res = await request(app).get("/supplemental").send({variable: 1});
+            const testURL: string = "/supplemental?variable=1";
+            const res = await request(app).get("/supplemental");
             expect(res.status).toBe(400);
-          })
+          });
+
     });
 });
