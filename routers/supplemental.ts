@@ -37,6 +37,13 @@ router.get('/query', validateQuerySchema(supplementalSchemas.queryReq), async (r
             colsWanted: String(req.query.colsWanted).split(","),
         };
 
+        // Special case "order" column name for sciname metadata table
+        criteria.colsWanted.forEach((item, index) => {
+            if (item === "order") {
+                criteria.colsWanted[index] = '"order"';
+            }
+        })
+
         const filteredSearch: Number = parseInt(String(req.query.searchCriteria));
         const baseParams: String[] = ["table", "colsWanted", "searchCriteria"];
 
@@ -57,6 +64,7 @@ router.get('/query', validateQuerySchema(supplementalSchemas.queryReq), async (r
         res.json(finalResult);
     }
     catch(e) {
+        console.log(e);
         res.sendStatus(500);
     }
 })

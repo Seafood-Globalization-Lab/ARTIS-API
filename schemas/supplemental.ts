@@ -20,7 +20,7 @@ const Schemas = {
         // can only ask for columns in the sciname metadata table
         colsWanted: Joi.string().required(),
         searchCriteria: Joi.number().integer().valid(0, 1).required()
-    })
+    }).unknown(true)
 }
 
 export default Schemas;
