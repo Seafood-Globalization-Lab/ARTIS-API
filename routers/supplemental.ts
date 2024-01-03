@@ -40,7 +40,7 @@ router.get('/query', validateQuerySchema(supplementalSchemas.queryReq), async (r
         // Getting criteria from body
         const tblName: string = String(req.query.table);
         let criteria: any = {
-            colsWanted: String(req.query.cols_wanted).split(","),
+            colsWanted: decodeURI(String(req.query.cols_wanted)).split(","),
         };
 
         // Special case "order" column name for sciname metadata table
@@ -60,7 +60,7 @@ router.get('/query', validateQuerySchema(supplementalSchemas.queryReq), async (r
             Object.entries(req.query).forEach(([key, value]) => {
                 // only parse non base parameters for filtering criteria
                 if (!baseParams.includes(key)) {
-                    criteria['searchCriteria'][key] = String(value).split(",")
+                    criteria['searchCriteria'][key] = decodeURI(String(value)).split(",")
                 }
             })
         }
