@@ -17,16 +17,16 @@ describe("snet table", () => {
 
             const outputCols: string = "exporter_iso3c,year,method";
             const weightOutput: string = "live_weight_t";
-            const colsWantedRegExp: string = "^exporter_iso3c$|^year$|^method$";
+            const cols_wantedRegExp: string = "^exporter_iso3c$|^year$|^method$";
             const exporters: string = "CHN,USA,RUS";
             const exportersRegExp: string = "^CHN$|^USA$|^RUS$";
             const methods: string = "capture";
             const start_year = 2017;
             const end_year = 2019;
 
-            const testURL = "/snet/query?colsWanted=" + outputCols +
-                "&weightType=" + weightOutput +
-                "&searchCriteria=" + 1 +
+            const testURL = "/snet/query?cols_wanted=" + outputCols +
+                "&weight_type=" + weightOutput +
+                "&search_criteria=" + 1 +
                 "&method=" + methods +
                 "&exporter_iso3c=" + exporters +
                 "&start_year=" + start_year +
@@ -67,9 +67,9 @@ describe("snet table", () => {
             const start_year = 2017;
             const end_year = 2019;
 
-            const testURL = "/snet/query?colsWanted=" + outputCols +
-                "&weightType=" + weightOutput +
-                "&searchCriteria=" + 1 +
+            const testURL = "/snet/query?cols_wanted=" + outputCols +
+                "&weight_type=" + weightOutput +
+                "&search_criteria=" + 1 +
                 "&sciname=" + sciname +
                 "&exporter_iso3c=" + exporters +
                 "&start_year=" + start_year +
@@ -87,12 +87,12 @@ describe("snet table", () => {
         
         it("should error when request is malformed", async() => {
             const colsOutputs = "exporter_iso3c,year";
-            const weightType = "live_wgt"; // Note this is the incorrect column name should be: live_weight_t
+            const weight_type = "live_wgt"; // Note this is the incorrect column name should be: live_weight_t
             const start_year = 2017;
             const end_year = 2019;
 
-            const testURL = "/snet/query?colsWanted=" + colsOutputs +
-                "&weightType=" + weightType +
+            const testURL = "/snet/query?cols_wanted=" + colsOutputs +
+                "&weight_type=" + weight_type +
                 "&start_year=" + start_year +
                 "&end_year=" + end_year;
             

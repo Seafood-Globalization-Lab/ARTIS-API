@@ -7,9 +7,9 @@ import Joi from 'joi';
 const Schemas = {
 
     queryReq: Joi.object({
-        colsWanted: Joi.string().required(),// Joi.array().items(Joi.string().valid(...snetCols)).required(),
-        weightType: Joi.string().valid(...snetWeightTypes).required(),
-        searchCriteria: Joi.number().integer().valid(1, 0).required(),
+        cols_wanted: Joi.string().required(),// Joi.array().items(Joi.string().valid(...snetCols)).required(),
+        weight_type: Joi.string().valid(...snetWeightTypes).required(),
+        search_criteria: Joi.number().integer().valid(1, 0).required(),
         exporter_iso3c: Joi.string().optional(),
         importer_iso3c: Joi.string().optional(),
         source_country_iso3c: Joi.string().optional(),

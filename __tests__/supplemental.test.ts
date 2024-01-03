@@ -53,7 +53,7 @@ describe("supplemental tables", () => {
          it("should return filtered query", async () => {
           const tableVar: string = "sciname";
           const outputCols: string = "sciname,common_name,isscaap,genus";
-          const testURL: string = "/supplemental/query?table=" + tableVar + "&colsWanted=" + outputCols + "&searchCriteria=1" + "&genus=thunnus";
+          const testURL: string = "/supplemental/query?table=" + tableVar + "&cols_wanted=" + outputCols + "&search_criteria=1" + "&genus=thunnus";
 
           const res = await request(app).get(testURL);
 
@@ -76,7 +76,7 @@ describe("supplemental tables", () => {
          it("should return an empty response", async() => {
           const tableVar: string = "sciname";
           const outputCols: string = "sciname,common_name";
-          const testURL: string = "/supplemental/query?table=" + tableVar + "&colsWanted=" + outputCols + "&searchCriteria=1" + "&sciname=doesntexist";
+          const testURL: string = "/supplemental/query?table=" + tableVar + "&cols_wanted=" + outputCols + "&search_criteria=1" + "&sciname=doesntexist";
 
           const res = await request(app).get(testURL);
 

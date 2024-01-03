@@ -10,9 +10,9 @@ const router = Router();
 // Getting snet data: specific columns and filter based on specific criteria
 router.get('/query', validateQuerySchema(snetSchemas.queryReq), async (req, res) => {
     try {
-        const colsWanted: string[] = String(req.query.colsWanted).split(",");
-        const weightType: string = String(req.query.weightType);
-        const filteredSearch: number = parseInt(String(req.query.searchCriteria));
+        const colsWanted: string[] = String(req.query.cols_wanted).split(",");
+        const weightType: string = String(req.query.weight_type);
+        const filteredSearch: number = parseInt(String(req.query.search_criteria));
 
         let criteria: any = {
             colsWanted: colsWanted,
@@ -20,7 +20,7 @@ router.get('/query', validateQuerySchema(snetSchemas.queryReq), async (req, res)
             searchCriteria: {}
         };
 
-        const baseParams: string[] = ["colsWanted", "weightType", "searchCriteria"];
+        const baseParams: string[] = ["cols_wanted", "weight_type", "search_criteria"];
 
         if (filteredSearch === 1) {
 
