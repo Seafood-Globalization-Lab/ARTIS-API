@@ -15,12 +15,18 @@ router.get('/', validateQuerySchema(supplementalSchemas.colReq), async (req, res
     try {
 
         // supplemental metadata column
-        const tblName = req.query.table;
-        const colName = req.query.variable;
+        const tblName: string = String(req.query.table);
+        const colName: string = String(req.query.variable);
         // Requesting ARTIS database for a specific column
         const finalResult = await sendMetadataColQuery(tblName, colName);
-        // returns results
-        res.json(finalResult);
+
+        if (finalResult[colName].length > 0) {
+            // returns results
+            res.json(finalResult);
+        } else {
+            res.sendStatus(204);
+        }
+        
     }
     catch(e) {
         res.sendStatus(500);
@@ -60,8 +66,14 @@ router.get('/query', validateQuerySchema(supplementalSchemas.queryReq), async (r
         }
         // Sending supplemental metadata request to ARTIS database
         const finalResult: any = await sendMetadataQuery(tblName, criteria);
-        // Sending supplemental metadata back
-        res.json(finalResult);
+
+        if (finalResult.length > 0) {
+            // Sending supplemental metadata back
+            res.json(finalResult);
+        } else {
+            res.sendStatus(204);
+        }
+        
     }
     catch(e) {
         console.log(e);

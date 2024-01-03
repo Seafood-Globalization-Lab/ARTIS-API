@@ -16,9 +16,10 @@ const Schemas = {
         hs6: Joi.string().length(6).regex(new RegExp(/\d+/)).optional(),
         sciname: Joi.string().optional(),
         habitat: Joi.string().optional(),
+        method: Joi.string().optional(),
         dom_source: Joi.string().optional(),
-        start_year: Joi.number().integer().min(1996).max(2020).optional(),
-        end_year: Joi.number().integer().min(1996).max(2020)
+        start_year: Joi.number().integer().min(1996).max(2020).required(),
+        end_year: Joi.number().integer().min(1996).max(2020).required()
     })
 }
 

@@ -2,6 +2,7 @@
 import request from "supertest";
 import app from "../app";
 
+
 // tests for endpoint /sciname
 describe("supplemental tables", () => {
 
@@ -67,6 +68,20 @@ describe("supplemental tables", () => {
             // Check that responses agree with search criteria
             expect(elem["genus"]).toBe("thunnus");
           });
+         });
+
+         /* needs to:
+         - return a 204 status code
+         - return an empty body back */
+         it("should return an empty response", async() => {
+          const tableVar: string = "sciname";
+          const outputCols: string = "sciname,common_name";
+          const testURL: string = "/supplemental/query?table=" + tableVar + "&colsWanted=" + outputCols + "&searchCriteria=1" + "&sciname=doesntexist";
+
+          const res = await request(app).get(testURL);
+
+          expect(res.status).toBe(204);
+          expect(Object.keys(res.body).length).toBe(0);
          });
 
           /* needs to:

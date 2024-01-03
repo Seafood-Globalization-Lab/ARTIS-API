@@ -54,12 +54,38 @@ describe("snet table", () => {
                 
             });
         });
+
+        /* needs to:
+            - return a 204 status code
+            - due to non-existent sciname */
+        
+        it("should return an empty response", async() => {
+            const outputCols: string = "exporter_iso3c,year,method";
+            const weightOutput: string = "live_weight_t";
+            const exporters: string = "CHN,USA,RUS";
+            const sciname: string = "doesntexist";
+            const start_year = 2017;
+            const end_year = 2019;
+
+            const testURL = "/snet/query?colsWanted=" + outputCols +
+                "&weightType=" + weightOutput +
+                "&searchCriteria=" + 1 +
+                "&sciname=" + sciname +
+                "&exporter_iso3c=" + exporters +
+                "&start_year=" + start_year +
+                "&end_year=" + end_year;
+            
+            const res = await request(app).get(testURL);
+
+            expect(res.status).toBe(204);
+            expect(Object.keys(res.body).length).toBe(0);
+        });
+        
         
         /* needs to:
-           - return a 500 status code */
+           - return a 400 status code */
         
         it("should error when request is malformed", async() => {
-            const scinameVar = 'sciname';
             const colsOutputs = "exporter_iso3c,year";
             const weightType = "live_wgt"; // Note this is the incorrect column name should be: live_weight_t
             const start_year = 2017;
@@ -71,7 +97,7 @@ describe("snet table", () => {
                 "&end_year=" + end_year;
             
             const res = await request(app).get(testURL);
-            expect(res.status).toBe(500);
+            expect(res.status).toBe(400);
             
         });
     });

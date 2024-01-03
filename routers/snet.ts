@@ -41,8 +41,13 @@ router.get('/query', validateQuerySchema(snetSchemas.queryReq), async (req, res)
 
         // Sending request to ARTIS database
         const finalResult = await sendSnetQuery(criteria);
-        // Sending response back
-        res.json(finalResult);
+
+        if (finalResult.length > 0) {
+            // Sending response back
+            res.json(finalResult);
+        } else {
+            res.sendStatus(204);
+        }
     }
     catch(e) {
         res.sendStatus(500);
