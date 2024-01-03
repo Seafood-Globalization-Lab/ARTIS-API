@@ -15,12 +15,16 @@
         <td>
         Required Parameters:
         <ul>
-            <li>colsWanted (at least one value required): "exporter_iso3c", "importer_iso3c", "source_country_iso3c", "hs6", "sciname", "habitat", "method", "dom_source", "year". </li>
-            <li>weightType (only one value can be selected): "product_weight_t" or "live_weight_t"</li>
+            <li>cols_wanted (at least one value required): "exporter_iso3c", "importer_iso3c", "source_country_iso3c", "hs6", "sciname", "habitat", "method", "dom_source", "year". </li>
+            <li>weight_type (only one value can be selected): "product_weight_t" or "live_weight_t"</li>
+            <li>start_year: year from 1996-2020 (inclusive)</li>
+            <li>end_year: year from 1996-2020 (inclusive)</li>
+            <li>search_criteria: Either 1 or 0. 1 notes that additional filtering criteria will be included, 0 notes no filter criteria is required.</li>
+            <i>Note: start_year cannot be greater than end_year. For results for just 1 year, make start_year equal to end_year.</i>
         </ul>
         Optional Parameters:
         <ul>
-            <li>searchCriteria: Object with key value pairs. Keys are ARTIS snet table column names and values are the values to filter those columns by.</li>
+            <li>Send in additional column names as parameters, with strings as values for the values you want to filter for.</li>
         </ul>
         </td>
         <td>
@@ -48,11 +52,12 @@
         Required Parameters:
         <ul>
             <li>table: supplemental table name you want information from.</li>
-            <li>colsWanted: columns include in the table requested.</li>
+            <li>cols_wanted: columns include in the table requested.</li>
+            <li>search_criteria: Either 1 or 0. 1 notes that additional filtering criteria will be included, 0 notes no filter criteria is required.</li>
         </ul>
         Optional Parameters:
         <ul>
-            <li>searchCriteria: Object with key value pairs. Keys are supplemental table's column names and values are the values to filter those columns by.</li>
+            <li>Send in additional column names as parameters, with strings as values for the values you want to filter for.</li>
         <ul>
         </td>
         <td>
@@ -69,21 +74,29 @@ An indepth review of the API requests and responses is available below.
 This section outlines how to make requests for data within the ARTIS snet table. Note that all requests require some kind of filtering criteria, if you would like to request the complete ARTIS snet data please send an email to [ENTER EMAIL HERE].
 
 A request for the main ARTIS snet table consists of 3 fields:
-- colsWanted **(REQUIRED)**: A list of strings containing the names of the columns used to summarize the ARTIS data you are requesting.
-- weightType **(REQUIRED)**: A string either "live_weight_t" or "product_weight_t", denoting what mass measurement you would like to use. Note you can only choose ONE weightType.
-- searchCriteria *(Optional)*: An object with key value pairs that is used to filter the ARTIS snet data down to a desired output. The keys need to be the ARTIS snet column names. All keys except for year, should have a list of strings denoting which values you want to keep in your output. The year parameter should be a list of integers of length 2, where the first integer is the start year and the second integer is the end year, denoting the timeframe of ARTIS data you want to request.
+- cols_wanted **(REQUIRED)**: A string containing the names of the columns, comma separated without spaces, used to summarize the ARTIS data you are requesting.
+- weight_type **(REQUIRED)**: A string either "live_weight_t" or "product_weight_t", denoting what mass measurement you would like to use. Note you can only choose ONE weight_type.
+- search_criteria **(REQUIRED)**: Either 1 or 0. 1 notes that additional filtering criteria will be included, 0 notes no filter criteria is required. Note all optional parameters sent will be treated as filtering criteria if search_criteria is set to 1. If search_criteria is set to 0, then all optional parameters will be ignored.
 
 ### Examples
 
-If you wanted to send a request for all ARTIS snet data summarize by year you would send the following request.
+If you wanted to send a request for all ARTIS snet data summarize by year you would send a GET request to the `/snet/query` endpoint, with the following parameters:
 
-*Note:* In this request we are NOT performing any filtering on the ARTIS snet.
+*Note:* In this request we are NOT performing any filtering on the ARTIS snet (with exception of the start and end years).
+
 ```json
 {
-    "colsWanted": ["year"],
-    "weightType": "live_weight_t"
+    "cols_wanted": "year",
+    "weight_type": "live_weight_t",
+    "start_year": 2015,
+    "end_year": 2020,
+    "search_criteria": 0
 }
 ```
+The endpoint with parameters would look like this:
+
+`/snet/query?cols_wanted=year&weight_t=live_weight_t&start_year=2015&end_year=2020&search_criteria=0`
+
 Here is a sample response:
 ```json
 [
@@ -115,18 +128,22 @@ Here is a sample response:
 ```
 
 
-If you wanted to send the same request but only for US and China capture trade from 2017 - 2019 you would edit the request like this:
+If you wanted to send the same request but only for US and China capture trade from 2017 - 2019 you would include the following parameters:
 ```json
 {
-    "colsWanted": ["exporter_iso3c", "year"],
-    "weightType": "live_weight_t",
-    "searchCriteria": {
-        "exporter_iso3c": ["CHN", "USA"],
-        "method": ["capture"],
-        "year": [2017, 2019]
-    }
+    "cols_wanted": "exporter_iso3c,year",
+    "weight_type": "live_weight_t",
+    "start_year": 2017,
+    "end_year": 2019,
+    "search_criteria": 1,
+    "exporter_iso3c": "CHN,USA",
+    "method": "capture"
 }
 ```
+
+The final url would look like this:
+
+`/snet/query?cols_wanted=exporter_iso3c,year&weight_type=live_weight_t&start_year=2017&end_year=2019&search_criteria=1&exporter_iso3c=CHN,USA&method=capture`
 
 Here is a sample response:
 ```json
@@ -167,14 +184,18 @@ Here is a sample response:
 If you wanted to explore bilateral trade relationships for a specific species (salmo salar) in 2019, you would send the following request:
 ```json
 {
-    "colsWanted": ["exporter_iso3c", "importer_iso3c", "year"],
-    "weightType": "live_weight_t",
-    "searchCriteria": {
-        "sciname": ["salmo salar"],
-        "year": [2019, 2019]
-    }
+    "cols_wanted": "exporter_iso3c,importer_iso3c,year",
+    "weight_type": "live_weight_t",
+    "start_year": 2019,
+    "end_year": 2019,
+    "search_criteria": 1,
+    "sciname": "salmo salar"
 }
 ```
+
+The final URL would look like this:
+`/snet/query?cols_wanted=exporter_iso3c,importer_iso3c,year&weight_type=live_weight_t&start_year=2019&end_year=2019&search_criteria=1&sciname=salmo salar`
+
 Here is a sample response:
 
 ```json
@@ -216,18 +237,21 @@ You can make 2 kinds of requests for data in supplemental tables:
 2. Getting all rows based on a filtered search criteria. These requests are made to the url: ```/supplemental/query/```
     - This type of the request has the uses the following parameters:
         - table **(REQUIRED)**: A string corresponding to the name of the supplemental table you want information from.
-        - colsWanted **(REQUIRED)**: A list of strings corresponding to the columns that will be returned for each row.
-        - searchCriteria *(Optional)*: An object with key value pairs that is used to filter the ARTIS snet data down to a desired output. The keys need to be the column names of the specific supplemental table being requested from. All keys should have a list of strings denoting which values you want to keep in your output.
+        - cols_wanted **(REQUIRED)**: A string corresponding to the columns, comma separated, that will be returned for each row.
+        - search_criteria **(REQUIRED)**: Either 1 or 0. 1 notes that additional filtering criteria will be included, 0 notes no filter criteria is required. Note all optional parameters sent will be treated as filtering criteria if search_criteria is set to 1. If search_criteria is set to 0, then all optional parameters will be ignored.
 
 ### Examples
 
-If you wanted to get all scientific names for all the species / species groups in ARTIS:
+If you wanted to get all scientific names for all the species / species groups in ARTIS you would send a request to the `/supplemental` endpoint with the following parameters:
 ```json
 {
     "table": "sciname",
     "variable": "sciname"
 }
 ```
+
+The final URL would be:
+`/supplemental/?table=sciname&variable=sciname`
 
 Here is sample response:
 ```json
@@ -245,13 +269,17 @@ Here is sample response:
 }
 ```
 
-If you wanted to get all common names for all the species / species groups in ARTIS:
+If you wanted to get all common names for all the species / species groups in ARTIS, you would send a request to the `/supplemental` endpoint with the following parameters:
+
 ```json
 {
     "table": "sciname",
     "variable": "common_name"
 }
 ```
+
+The final URL would be:
+`/supplemental/?table=sciname&variable=common_name`
 
 Here is a sample response:
 ```json
@@ -267,16 +295,19 @@ Here is a sample response:
 ]
 ```
 
-If you wanted to get all scientific, common names and ISSCAAP groups for a specific genus (for example thunnus):
+If you wanted to get all scientific, common names and ISSCAAP groups for a specific genus (for example thunnus) you would send a request to the `/supplemental/query` endpoint with the following parameters:
+
 ```json
 {
     "table": "sciname",
-    "colsWanted": ["sciname", "common_name", "isscaap"],
-    "searchCriteria": {
-        "genus": ["thunnus"]
-    }
+    "cols_wanted": "sciname,common_name,isscaap",
+    "search_criteria": 1,
+    "genus": "thunnus"
 }
 ```
+The final URL would be:
+`/supplemental/query?table=sciname&cols_wanted=sciname,common_name,isscaap&search_criteria=1&genus=thunnus`
+
 Here is a sample response:
 ```json
 [
@@ -293,17 +324,20 @@ Here is a sample response:
 ]
 ```
 
-If you wanted to get production of all USA and Chilean salmo salar by production method and year:
+If you wanted to get production of all USA and Chilean salmo salar by production method and year, you would send a request to the `/supplemental/query` endpoint with the following parameters:
+
 ```json
 {
     "table": "production",
-    "colsWanted": ["iso3c", "method", "year", "live_weight_t"],
-    "searchCriteria": {
-        "sciname": ["salmo salar"],
-        "iso3c": ["USA", "CHL"]
-    }
+    "cols_wanted": "iso3c,method,year,live_weight_t",
+    "search_criteria": 1,
+    "sciname": "salmo salar",
+    "iso3c": "USA,CHL"
 }
 ```
+The final URL would be:
+`/supplemental/query?table=production&cols_wanted=iso3c,method,year,live_weight_t&search_criteria=1&sciname=salmo salar&iso3c=USA,CHL`
+
 Here is a sample response:
 ```json
 [
