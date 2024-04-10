@@ -65,6 +65,20 @@ export const sendQuery = async (query: string) => {
     }
 }
 
+
+// Returns rows matching api key
+export const db_check_api_key = async (api_key: string) => {
+
+    const query: string = "SELECT * FROM auth WHERE api_key = '" + api_key + "'";
+
+    try {
+        return await db.any(query);
+    }
+    catch(e) {
+        throw new Error(e);
+    }
+}
+
 export const sendMetadataColQuery = async (tblName, colName) => {
     // Creating a SQL query string for dstinct values in sciname metadata column
     const query: string = createColQuery(tblName, colName);
