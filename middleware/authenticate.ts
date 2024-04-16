@@ -40,9 +40,5 @@ export const authenticate_key = async (req, res, next) => {
     
 }
 
-// Registers a new API user and returns their new API key
 
-// Deletes an API user
-
-// Changes a current API user's permissions
 

@@ -65,14 +65,45 @@ export const sendQuery = async (query: string) => {
     }
 }
 
+export const sendInsert = async (query: string) => {
+    try {
+        await db.none(query)
+        .then(() => {
+            // success return 200;
+            return(200);
+        })
+        .catch(error => {
+            throw new Error(error);
+        });
+    }
+    catch(e) {
+        throw new Error(e);
+    }
+}
+
+export const sendDelete = async (query: string) => {
+    try {
+        await db.any(query)
+        .then(result => {
+            console.log(result); // print how many records were deleted;
+            return result;
+        })
+        .catch(error => {
+            throw new Error(error);
+        });
+    }
+    catch(e) {
+        throw new Error(e);
+    }
+}
 
 // Returns rows matching api key
 export const db_check_api_key = async (api_key: string) => {
 
-    const query: string = "SELECT * FROM auth WHERE api_key = '" + api_key + "'";
+    const query: string = "SELECT * FROM users WHERE api_key = '" + api_key + "'";
 
     try {
-        return await db.any(query);
+        return await sendQuery(query);
     }
     catch(e) {
         throw new Error(e);
