@@ -6,6 +6,7 @@ export * from './production';
 export * from './products';
 export * from './baci';
 export * from './snet';
+export * from './consumption'
 
 export const supplementalTables: string[] = [
     'sciname', 'countries', 'production', 'products', 'baci'

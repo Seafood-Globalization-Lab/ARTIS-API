@@ -3,22 +3,20 @@
 import { sendQuery } from './connect_db'
 
 // year is a number array, all other filtering criteria are string arrays
-interface ISnetSearchCriteria {
+interface IconsumptionSearchCriteria {
     [property: string]: string[] | number[];
 }
 
-// Snet DB request format
-interface ISnetCriteria {
+// consumption DB request format
+interface IconsumptionCriteria {
     colsWanted: string[],
-    weightType: string,
-    searchCriteria: ISnetSearchCriteria
+    searchCriteria: IconsumptionSearchCriteria
 }
 
-// Creates SQL query for ARTIS snet table
-const createSnetQuery = (criteria: ISnetCriteria): string => {
-    
-    // initial query getting built
-    let query = `SELECT ${criteria.colsWanted.join(', ')}, SUM(${criteria.weightType}) AS ${criteria.weightType} FROM snet`;
+// Creates SQL query for ARTIS consumption table
+const createConsumptionQuery = (criteria: IconsumptionCriteria): string => {
+    // initial query
+    let query = `SELECT ${criteria.colsWanted.join(', ')}, SUM(consumption_live_t) AS consumption_live_t FROM complete_consumption`;
 
     let minYear: number = 1996;
     let maxYear: number = 2020;
@@ -84,18 +82,17 @@ const createSnetQuery = (criteria: ISnetCriteria): string => {
 
     // group weight values by columns requested
     query = query + ` GROUP BY ${criteria.colsWanted.join(', ')}`;
-    
+
     return query;
 }
 
-// Sends snet request to ARTIS database
-export const sendSnetQuery = async (criteria: ISnetCriteria) => {
-    // snet request to snet SQL query
-    const query = createSnetQuery(criteria);
+// Sends consumption request to ARTIS database
+export const sendConsumptionQuery = async (criteria: IconsumptionCriteria) => {
+    // consumption request to consumption SQL query
+    const query = createConsumptionQuery(criteria);
     try {
         // sending request to database
         const resp = await sendQuery(query);
-
         return resp;
     }
     catch(e) {
@@ -103,14 +100,14 @@ export const sendSnetQuery = async (criteria: ISnetCriteria) => {
     }
 }
 
-export const snetCols: string[] = [
-    'exporter_iso3c', 'importer_iso3c', 'source_country_iso3c',
-    'hs6', 'sciname', 'method', 'habitat', 'dom_source', 'year'
+export const consumptionCols: string[] = [
+    'year', 'hs_version', 'source_country_iso3c', 'exporter_iso3c',
+    'consumer_iso3c', 'dom_source', 'sciname', 'habitat', 'method',
+    'consumption_source', 'sciname_hs_modified', 'consumption_live_t'
 ];
 
-const snetSet = new Set(snetCols);
+const consumptionSet = new Set(consumptionCols);
 
-export const snetWeightTypes: string[] = ['product_weight_t', 'live_weight_t'];
-export const snetHabitats: string[] = ['inland', 'marine'];
-export const snetMethods: string[] = ['capture', 'aquaculture'];
-export const snetExportSources: string[] = ['domestic export', 'foreign export']
+export const consumptionHabitats: string[] = ['inland', 'marine'];
+export const consumptionMethods: string[] = ['capture', 'aquaculture'];
+export const consumptionExportSources: string[] = ['domestic export', 'foreign export']

@@ -1,32 +1,27 @@
 
 // Modules
 import { Router } from 'express';
-import { validateQuerySchema } from '../middleware/schemaValidator';
-import snetSchemas from '../schemas/snet';
-import { sendSnetQuery } from '../db';
+import { sendConsumptionQuery } from '../db';
 
 const router = Router();
 
 // Getting snet data: specific columns and filter based on specific criteria
-router.get('/query', validateQuerySchema(snetSchemas.queryReq), async (req, res) => {
+router.get('/query', async (req, res) => {
     try {
         const colsWanted: string[] = decodeURI(String(req.query.cols_wanted)).split(",");
-        const weightType: string = String(req.query.weight_type);
         const filteredSearch: number = parseInt(String(req.query.search_criteria));
 
         let criteria: any = {
             colsWanted: colsWanted,
-            weightType: weightType,
             searchCriteria: {}
         };
 
-        const baseParams: string[] = ["cols_wanted", "weight_type", "search_criteria"];
+        const baseParams: string[] = ["cols_wanted", "search_criteria"];
 
         if (filteredSearch === 1) {
 
             Object.entries(req.query).forEach(([key, value]) => {
                 // only parse non base parameters for filtering criteria
-                // iterate over all filtering criteria
                 if (!baseParams.includes(key)) {
                     criteria['searchCriteria'][key] = decodeURI(String(value)).split(",")
                 }
@@ -43,7 +38,7 @@ router.get('/query', validateQuerySchema(snetSchemas.queryReq), async (req, res)
         }
 
         // Sending request to ARTIS database
-        const finalResult = await sendSnetQuery(criteria);
+        const finalResult = await sendConsumptionQuery(criteria);
 
         if (finalResult.length > 0) {
             // Sending response back
