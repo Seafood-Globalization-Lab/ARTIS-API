@@ -16,10 +16,8 @@ interface ISnetCriteria {
 
 // Creates SQL query for ARTIS snet table
 const createSnetQuery = (criteria: ISnetCriteria): string => {
-
-    console.log(criteria);
     
-    // initial 
+    // initial query getting built
     let query = `SELECT ${criteria.colsWanted.join(', ')}, SUM(${criteria.weightType}) AS ${criteria.weightType} FROM snet`;
 
     let minYear: number = 1996;
@@ -31,7 +29,6 @@ const createSnetQuery = (criteria: ISnetCriteria): string => {
 
             minYear = Number(criteria.searchCriteria.year[0]);
             maxYear = Number(criteria.searchCriteria.year[1]);
-            // query = 'WITH t1 as (' + query + ') SELECT * FROM t1 WHERE ' + `year >= ${minYear} AND year <= ${maxYear}`
         }
     }
 
@@ -50,8 +47,6 @@ const createSnetQuery = (criteria: ISnetCriteria): string => {
         delete criteria['searchCriteria']['custom_timeline']
     }
 
-    console.log(hs_years_requested);
-
     // build hs version - year conditional statement
     let hs_years = "";
     for (let i = 0; i < hs_years_requested.length; i++) {
@@ -64,8 +59,6 @@ const createSnetQuery = (criteria: ISnetCriteria): string => {
     }
     hs_years = "(" + hs_years.slice(0, -4) + ")";
     query = query + ' AND ' + hs_years;
-
-    console.log(query)
 
     // if there are filtering criteria
     if ('searchCriteria' in criteria) {
@@ -92,9 +85,6 @@ const createSnetQuery = (criteria: ISnetCriteria): string => {
     // group weight values by columns requested
     query = query + ` GROUP BY ${criteria.colsWanted.join(', ')}`;
     
-
-    console.log(query);
-
     return query;
 }
 
@@ -106,7 +96,6 @@ export const sendSnetQuery = async (criteria: ISnetCriteria) => {
         // sending request to database
         const resp = await sendQuery(query);
 
-        console.log(resp);
         return resp;
     }
     catch(e) {
