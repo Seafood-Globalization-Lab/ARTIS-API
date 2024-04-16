@@ -1,7 +1,7 @@
 
 // Modules
 import { NextFunction, Request, Response } from 'express';
-import { consumptionCols, consumptionWeightTypes, consumptionHabitats, consumptionMethods, consumptionExportSources } from '../db/consumption';
+import { consumptionCols, consumptionHabitats, consumptionMethods, consumptionExportSources } from '../db/consumption';
 import Joi from 'joi';
 
 const Schemas = {
