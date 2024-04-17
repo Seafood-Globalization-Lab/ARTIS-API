@@ -48,6 +48,7 @@ if (process.env.NODE_ENV === 'production') {
             tls: true,
             rejectUnauthorized: false
           }
+    }
 }
 //----------------------------------------------------------------------------------------
 
