@@ -32,10 +32,22 @@ if (process.env.NODE_ENV === 'production') {
 //----------------------------------------------------------------------------------------
 
 // redis database config options----------------------------------------------------------
-export const redisOptions = {
-    host: String(process.env.REDIS_HOST),
-    port: Number(process.env.REDIS_PORT)
-};
+export let redisOptions = null;
+
+if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'testing') {
+    redisOptions = {
+        host: String(process.env.REDIS_HOST),
+        port: Number(process.env.REDIS_PORT)
+    };
+}
+
+if (process.env.NODE_ENV === 'production') {
+    redisOptions = {
+        host: String(process.env.REDIS_HOST),
+        port: Number(process.env.REDIS_PORT),
+        password: String(process.env.REDIS_PASSWORD)
+    };
+}
 //----------------------------------------------------------------------------------------
 
 // Connecting to database
