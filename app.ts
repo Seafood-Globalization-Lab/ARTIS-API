@@ -3,6 +3,7 @@ import { authenticate_key } from './middleware/authenticate';
 import accessRouter from './routers/authenticate'
 import jobsRouter from './routers/jobs'
 import snetRouter from './routers/snet'
+import supplementalRouter from './routers/supplemental'
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use('/', authenticate_key)
 app.use('/access', accessRouter);
 app.use('/jobs', jobsRouter);
 app.use('/snet', snetRouter);
+app.use('/supplemental', supplementalRouter);
 
 
 export default app;

@@ -1,6 +1,6 @@
 
 import { Router } from 'express';
-import { pgJobsQ } from '../db'
+import { pgJobsQ } from '../db';
 
 // Router to manage all requests involving seafood trade network data
 const router = Router();
