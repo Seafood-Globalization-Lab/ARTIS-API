@@ -43,10 +43,11 @@ if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'testing'
 
 if (process.env.NODE_ENV === 'production') {
     redisOptions = {
-        host: String(process.env.REDIS_HOST),
-        port: Number(process.env.REDIS_PORT),
-        password: String(process.env.REDIS_PASSWORD)
-    };
+        url: process.env.REDIS_URL,
+        socket: {
+            tls: true,
+            rejectUnauthorized: false
+          }
 }
 //----------------------------------------------------------------------------------------
 
