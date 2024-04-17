@@ -4,9 +4,10 @@
 import { Router } from 'express';
 import { pgJobsQ } from '../db';
 
-// Router for authentication
+// Example router that just echos a message
 const router = Router();
 
+// GET message
 router.get('/', async (req, res) => {
 
     try {
@@ -19,6 +20,7 @@ router.get('/', async (req, res) => {
     }
 })
 
+// Return job update
 router.get('/jobUpdate', async (req, res) => {
     
     try {
