@@ -4,7 +4,6 @@
 const pgp = require('pg-promise')();
 const dotenv = require('dotenv').config();
 const { Queue } = require('bullmq');
-import { v4 as uuidv4 } from 'uuid';
 
 
 // POSTGRES Database Connection-------------------------------------------------
@@ -33,9 +32,9 @@ if (process.env.NODE_ENV === 'production') {
 //----------------------------------------------------------------------------------------
 
 // redis database config options----------------------------------------------------------
-const redisOptions = {
-    host: process.env.REDIS_HOST,
-    port: process.env.REDIS_PORT
+export const redisOptions = {
+    host: String(process.env.REDIS_HOST),
+    port: Number(process.env.REDIS_PORT)
 };
 //----------------------------------------------------------------------------------------
 
@@ -44,7 +43,6 @@ export const db = pgp(cn);
 
 // Send Request over to PostgresSQL database
 export const makePgRequest = async (query: string) => {
-    
     try {
         // sending request over to the database
         return await db.any(query);
