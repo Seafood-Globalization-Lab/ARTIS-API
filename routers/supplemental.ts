@@ -1,32 +1,26 @@
 
 // Modules
 import { Router } from 'express';
-import { IMetadataCriteria, sendMetadataColQuery, sendMetadataQuery } from '../db';
-import supplementalSchemas from '../schemas/supplemental';
-import { validateQuerySchema } from '../middleware/schemaValidator';
-import { createRequire } from 'module';
+import { sendMetadataColQuery, sendMetadataQuery } from '../db';
+import { validateSchema } from '../middleware';
+import { supplementalSchemas } from '../schemas';
 
-// Router for supplementals
+// router for supplemental metadata
 const router = Router();
 
 // GET all distinct values from the ARTIS supplemental table for a particular column
-router.get('/', validateQuerySchema(supplementalSchemas.colReq), async (req, res) => {
+router.get('/', validateSchema(supplementalSchemas.colReq), async (req, res) => {
 
     try {
 
         // supplemental metadata column
         const tblName: string = String(req.query.table);
         const colName: string = String(req.query.variable);
-        // Requesting ARTIS database for a specific column
+        // Requesting ARTIS database for a specific metadata column column
         const finalResult = await sendMetadataColQuery(tblName, colName);
 
-        if (finalResult[colName].length > 0) {
-            // returns results
-            res.json(finalResult);
-        } else {
-            res.sendStatus(204);
-        }
-        
+        if (finalResult[colName].length > 0) { res.json(finalResult); }
+        else { res.sendStatus(204); } // no results
     }
     catch(e) {
         res.sendStatus(500);
@@ -34,7 +28,7 @@ router.get('/', validateQuerySchema(supplementalSchemas.colReq), async (req, res
 })
 
 // GET specific columns and filter supplemental metadata based on certain criteria
-router.get('/query', validateQuerySchema(supplementalSchemas.queryReq), async (req, res) => {
+router.get('/query', validateSchema(supplementalSchemas.queryReq), async (req, res) => {
 
     try {
         // Getting criteria from body
@@ -82,3 +76,4 @@ router.get('/query', validateQuerySchema(supplementalSchemas.queryReq), async (r
 })
 
 export default router;
+

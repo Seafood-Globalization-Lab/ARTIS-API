@@ -1,10 +1,10 @@
 
 // Modules
 import { NextFunction, Request, Response } from 'express';
-import { snetCols, snetWeightTypes, snetHabitats, snetMethods, snetExportSources } from '../db/snet';
+import { snetWeightTypes } from '../db';
 import Joi from 'joi';
 
-const Schemas = {
+export const snetSchemas = {
 
     queryReq: Joi.object({
         cols_wanted: Joi.string().required(),// Joi.array().items(Joi.string().valid(...snetCols)).required(),
@@ -23,5 +23,3 @@ const Schemas = {
         custom_timeline: Joi.string().optional()
     })
 }
-
-export default Schemas;

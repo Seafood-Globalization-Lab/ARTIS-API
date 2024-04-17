@@ -1,20 +1,6 @@
 
-// Modules
-import { sendQuery } from './connect_db'
-
-// year is a number array, all other filtering criteria are string arrays
-interface IconsumptionSearchCriteria {
-    [property: string]: string[] | number[];
-}
-
-// consumption DB request format
-interface IconsumptionCriteria {
-    colsWanted: string[],
-    searchCriteria: IconsumptionSearchCriteria
-}
-
 // Creates SQL query for ARTIS consumption table
-const createConsumptionQuery = (criteria: IconsumptionCriteria): string => {
+export const createConsumptionQuery = (criteria): string => {
     // initial query
     let query = `SELECT ${criteria.colsWanted.join(', ')}, SUM(consumption_live_t) AS consumption_live_t FROM complete_consumption`;
 
@@ -86,28 +72,3 @@ const createConsumptionQuery = (criteria: IconsumptionCriteria): string => {
     return query;
 }
 
-// Sends consumption request to ARTIS database
-export const sendConsumptionQuery = async (criteria: IconsumptionCriteria) => {
-    // consumption request to consumption SQL query
-    const query = createConsumptionQuery(criteria);
-    try {
-        // sending request to database
-        const resp = await sendQuery(query);
-        return resp;
-    }
-    catch(e) {
-        throw new Error(e);
-    }
-}
-
-export const consumptionCols: string[] = [
-    'year', 'hs_version', 'source_country_iso3c', 'exporter_iso3c',
-    'consumer_iso3c', 'dom_source', 'sciname', 'habitat', 'method',
-    'consumption_source', 'sciname_hs_modified', 'consumption_live_t'
-];
-
-const consumptionSet = new Set(consumptionCols);
-
-export const consumptionHabitats: string[] = ['inland', 'marine'];
-export const consumptionMethods: string[] = ['capture', 'aquaculture'];
-export const consumptionExportSources: string[] = ['domestic export', 'foreign export']

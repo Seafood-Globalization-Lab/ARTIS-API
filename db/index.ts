@@ -1,12 +1,10 @@
 
 export * from './connect_db';
-export * from './sciname';
-export * from './countries';
-export * from './production';
-export * from './products';
-export * from './baci';
+export * from './authenticate';
+export * from './queue';
+export * from './supplemental';
 export * from './snet';
-export * from './consumption'
+export * from './consumption';
 
 export const supplementalTables: string[] = [
     'sciname', 'countries', 'production', 'products', 'baci'
