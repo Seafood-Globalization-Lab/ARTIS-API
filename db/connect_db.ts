@@ -43,7 +43,7 @@ if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'testing'
 
 if (process.env.NODE_ENV === 'production') {
     redisOptions = {
-        url: process.env.REDIS_URL,
+        url: process.env.REDIS_TLS_URL,
         socket: {
             tls: true,
             rejectUnauthorized: false
