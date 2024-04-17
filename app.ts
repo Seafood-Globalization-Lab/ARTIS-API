@@ -1,25 +1,16 @@
 import express from 'express';
-import accessRouter from './routers/authenticate'
-import echoRouter from './routers/echo'
-/*
-import jobsRouter from './routers/jobs'
-import supplementalRouter from './routers/supplemental'
-import snetRouter from './routers/snet'
-import consumptionRouter from './routers/consumption'
-*/
 import { authenticate_key } from './middleware/authenticate';
+import accessRouter from './routers/authenticate'
+import jobsRouter from './routers/jobs'
+import snetRouter from './routers/snet'
 
 const app = express();
 
 app.use(express.json());
 app.use('/', authenticate_key)
 app.use('/access', accessRouter);
-app.use('/echo', echoRouter);
-/*
 app.use('/jobs', jobsRouter);
-app.use('/supplemental', supplementalRouter);
 app.use('/snet', snetRouter);
-app.use('/consumption', consumptionRouter);
-*/
+
 
 export default app;

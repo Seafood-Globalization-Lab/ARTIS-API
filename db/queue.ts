@@ -2,7 +2,7 @@
 import { redisOptions } from './connect_db';
 import { Queue, Job } from 'bullmq';
 import { PgWorker, setUpWorkers } from './worker';
-import { echoMessage } from './processors';
+import { processPgReq } from './processors';
 
 export interface IConnectionOptions {
     host: string;
@@ -58,7 +58,7 @@ export class PgQueue {
             const requestedJob = await this.q.getJob(jobId);
             jobUpdate.result = requestedJob.returnvalue;
         }
-
+        
         return jobUpdate
     }
 }
@@ -68,4 +68,4 @@ export const pgJobsQ = new PgQueue('pgJobsQ', redisOptions);
 
 // setting up workers of the Postgres queue
 export let workers: PgWorker[] = [];
-workers = setUpWorkers(workers, 'pgJobsQ', echoMessage, Number(process.env.NUM_PG_WORKERS));
+workers = setUpWorkers(workers, 'pgJobsQ', processPgReq, Number(process.env.NUM_PG_WORKERS));
