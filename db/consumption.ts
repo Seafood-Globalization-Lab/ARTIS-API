@@ -2,7 +2,7 @@
 // Creates SQL query for ARTIS consumption table
 export const createConsumptionQuery = (criteria): string => {
     // initial query
-    let query = `SELECT ${criteria.colsWanted.join(', ')}, SUM(consumption_live_t) AS consumption_live_t FROM complete_consumption`;
+    let query = `SELECT ${criteria.colsWanted.join(', ')}, SUM(consumption_live_t) AS consumption_live_t FROM consumption`;
 
     let minYear: number = 1996;
     let maxYear: number = 2020;
