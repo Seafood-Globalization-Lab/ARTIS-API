@@ -19,10 +19,10 @@ export class PgQueue {
     // note this is in seconds
     private readonly DEFAULT_REMOVE_CONFIG = {
         removeOnComplete: {
-            age: 5 * 60
+            age: 0.5 * 60
         },
         removeOnFail: {
-            age: 10 * 60
+            age: 0.5 * 60
         }
     };
 
@@ -57,6 +57,8 @@ export class PgQueue {
         if (jobStatus === 'completed') {
             const requestedJob = await this.q.getJob(jobId);
             jobUpdate.result = requestedJob.returnvalue;
+            // remove job to optimize memory
+            await requestedJob.remove();
         }
         
         return jobUpdate
