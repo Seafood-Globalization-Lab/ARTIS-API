@@ -32,8 +32,6 @@ export class PgQueue {
     constructor(qName, connectionOptions) {
         this.connectionOptions = connectionOptions;
         try {
-            console.log("testing redis connection");
-            console.log(connectionOptions);
             this.q = new Queue(qName, { connection: this.connectionOptions });
         }
         catch(e) {
