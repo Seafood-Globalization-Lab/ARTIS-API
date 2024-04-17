@@ -72,3 +72,6 @@ export const createSnetQuery = (criteria) => {
 
     return query;
 }
+
+// table structure for schema checking in middleware
+export const snetWeightTypes = ['live_weight_t', 'product_weight_t']

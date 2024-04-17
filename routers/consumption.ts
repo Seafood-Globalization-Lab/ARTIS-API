@@ -2,12 +2,14 @@
 // Modules
 import { Router } from 'express';
 import { pgJobsQ } from '../db';
+import { validateSchema } from '../middleware';
+import { consumptionSchemas } from '../schemas';
 
 // router for all consumption data requests
 const router = Router();
 
 // Getting snet data: specific columns and filter based on specific criteria
-router.get('/query', async (req, res) => {
+router.get('/query', validateSchema(consumptionSchemas.queryReq), async (req, res) => {
     try {
         const colsWanted: string[] = decodeURI(String(req.query.cols_wanted)).split(",");
         const filteredSearch: number = parseInt(String(req.query.search_criteria));
@@ -30,10 +32,13 @@ router.get('/query', async (req, res) => {
             })
 
             if (!('custom_timeline' in criteria.searchCriteria)) {
+                
+                // Get start and end year from requests
                 criteria["searchCriteria"]["start_year"] = parseInt(criteria["searchCriteria"]["start_year"]);
                 criteria["searchCriteria"]["end_year"] = parseInt(criteria["searchCriteria"]["end_year"]);
-
+                // place start and end year within a year array
                 criteria["searchCriteria"]["year"] = [criteria["searchCriteria"]["start_year"], criteria["searchCriteria"]["end_year"]];
+                // remove start and end year from search criteria since we will be using a year array
                 delete criteria["searchCriteria"]["start_year"];
                 delete criteria["searchCriteria"]["end_year"];
             }

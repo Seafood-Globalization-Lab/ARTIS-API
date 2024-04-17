@@ -68,3 +68,21 @@ export const sendMetadataQuery = async (tblName: string, criteria) => {
         throw new Error(e);
     }
 }
+
+// column information for schema checking--------------------------------------------------
+// supplemental tables
+export const supplementalTables: string[] = ['sciname', 'products', 'countries'];
+// Sciname columns
+export const scinameCols: string[] = [
+    'sciname', 'common_name', 'genus', 'subfamily', 
+    'family', 'order', 'class', 'superclass', 'phylum',
+    'kingdom', 'isscaap'
+];
+// Product table columns
+export const productsCols: string[] = [
+    'hs6', 'description', 'parent', 'classification', 'presentation', 'state'
+]
+// Countries table columns
+export const countriesCols = [
+    'iso3c', 'country_name', 'owid_region', 'continent'
+];

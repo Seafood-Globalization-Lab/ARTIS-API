@@ -2,12 +2,14 @@
 // Modules
 import { Router } from 'express';
 import { sendMetadataColQuery, sendMetadataQuery } from '../db';
+import { validateSchema } from '../middleware';
+import { supplementalSchemas } from '../schemas';
 
 // router for supplemental metadata
 const router = Router();
 
 // GET all distinct values from the ARTIS supplemental table for a particular column
-router.get('/', async (req, res) => {
+router.get('/', validateSchema(supplementalSchemas.colReq), async (req, res) => {
 
     try {
 
@@ -26,7 +28,7 @@ router.get('/', async (req, res) => {
 })
 
 // GET specific columns and filter supplemental metadata based on certain criteria
-router.get('/query', async (req, res) => {
+router.get('/query', validateSchema(supplementalSchemas.queryReq), async (req, res) => {
 
     try {
         // Getting criteria from body

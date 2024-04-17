@@ -1,5 +1,5 @@
 import express from 'express';
-import { authenticate_key } from './middleware/authenticate';
+import { authenticate_key } from './middleware';
 import accessRouter from './routers/authenticate';
 import supplementalRouter from './routers/supplemental'
 import jobsRouter from './routers/jobs';

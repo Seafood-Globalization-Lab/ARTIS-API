@@ -1,13 +1,12 @@
 
 // Modules
 import { NextFunction, Request, Response } from 'express';
-import { consumptionCols, consumptionHabitats, consumptionMethods, consumptionExportSources } from '../db/consumption';
 import Joi from 'joi';
 
-const Schemas = {
+export const consumptionSchemas = {
 
     queryReq: Joi.object({
-        cols_wanted: Joi.string().required(),// Joi.array().items(Joi.string().valid(...consumptionCols)).required(),
+        cols_wanted: Joi.string().required(),
         search_criteria: Joi.number().integer().valid(1, 0).required(),
         exporter_iso3c: Joi.string().optional(),
         consumer_iso3c: Joi.string().optional(),
@@ -21,5 +20,3 @@ const Schemas = {
         end_year: Joi.number().integer().min(1996).max(2020).required()
     })
 }
-
-export default Schemas;
