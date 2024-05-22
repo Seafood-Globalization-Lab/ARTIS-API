@@ -1,7 +1,7 @@
 # How to make Requests to the ARTIS API
 
 ## Permission to use ARTIS API
-All API users require an API key to submit requests to the ARTIS API. **Any requests not containing an API will automatically be rejected.** Please place your API key in the HTTP request header under the name "X-API-KEY".
+All API users require an API key to submit requests to the ARTIS API. **Any requests not containing an API key will automatically be rejected.** Please place your API key in the HTTP request header under the name "X-API-KEY".
 
 ## Summary
 <table>
@@ -37,8 +37,35 @@ All API users require an API key to submit requests to the ARTIS API. **Any requ
     </tr>
     <tr>
         <td>GET</td>
-        <td>/job/status</td>
+        <td>/consumption/query</td>
+        <td>
+        Required Parameters:
+        <ul>
+            <li>cols_wanted (at least one value required): "consumer_iso3c", "exporter_iso3c", "source_country_iso3", "year", "hs_version", "dom_source", "sciname", "habitat", "method", "consumption_source", "sciname_hs_modified"</li>
+            <li>start_year: year from 1996-2020 (inclusive)</li>
+            <li>end_year: year from 1996-2020 (inclusive)</li>
+            <li>search_criteria: Either 1 or 0. 1 notes that additional filtering criteria will be included, 0 notes no filter criteria is required.</li>
+        </ul>
+        Optional Parameters:
+        <ul><li>Send in additional column names as parameters, with strings as values for the values you want to filter for.</li></ul>
+        </td>
         <td></td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/jobs/status</td>
+        <td>
+        Required Parameters:
+        <ul>
+            <li>id: Job id number returned from an snet or consumption query</li>
+        </ul>
+        </td>
+        <td>
+        <ul>
+            <li>status: job status (wait/active/completed etc)</li>
+            <li>result: a list of objects where each object would correspond to a row of results for the query submitted</li>
+        </ul>
+        </td>
     </tr>
     <tr>
         <td>GET</td>
@@ -138,9 +165,11 @@ Note: ***The `/snet/query` endpoint only submits a job request and will not prov
 
 This section outlines how to make requests for data within the ARTIS snet table. Note that all requests require some kind of filtering criteria, if you would like to request the complete ARTIS snet data please send an email to [ENTER EMAIL HERE].
 
-A request for the main ARTIS snet table consists of 3 fields:
+A request for the main ARTIS snet table consists of 5 fields:
 - cols_wanted **(REQUIRED)**: A string containing the names of the columns, comma separated without spaces, used to summarize the ARTIS data you are requesting.
 - weight_type **(REQUIRED)**: A string either "live_weight_t" or "product_weight_t", denoting what mass measurement you would like to use. Note you can only choose ONE weight_type.
+- start_year **(REQUIRED)**: A year between 1996-2020
+- end_year **(REQUIRED)**: A year between 1996-2020 must be greater than or equal to start_year
 - search_criteria **(REQUIRED)**: Either 1 or 0. 1 notes that additional filtering criteria will be included, 0 notes no filter criteria is required. Note all optional parameters sent will be treated as filtering criteria if search_criteria is set to 1. If search_criteria is set to 0, then all optional parameters will be ignored.
 
 ### Examples
@@ -162,7 +191,7 @@ The endpoint with parameters would look like this:
 
 `/snet/query?cols_wanted=year&weight_t=live_weight_t&start_year=2015&end_year=2020&search_criteria=0`
 
-Here is a sample response:
+Here is a sample of the results list that would be returned:
 ```json
 [
     {
@@ -210,7 +239,7 @@ The final url would look like this:
 
 `/snet/query?cols_wanted=exporter_iso3c,year&weight_type=live_weight_t&start_year=2017&end_year=2019&search_criteria=1&exporter_iso3c=CHN,USA&method=capture`
 
-Here is a sample response:
+Here is a sample of the results list that would be returned:
 ```json
 [
     {
@@ -261,7 +290,7 @@ If you wanted to explore bilateral trade relationships for a specific species (s
 The final URL would look like this:
 `/snet/query?cols_wanted=exporter_iso3c,importer_iso3c,year&weight_type=live_weight_t&start_year=2019&end_year=2019&search_criteria=1&sciname=salmo salar`
 
-Here is a sample response:
+Here is a sample of the results list that would be returned:
 
 ```json
 [
@@ -283,6 +312,113 @@ Here is a sample response:
         "year": 2019,
         "live_weight_t": 2997.68945007121
     },
+```
+## Requests for Consumption data
+Note: ***The `/consumption/query` endpoint only submits a job request and will not provide results from the ARTIS consumption table.*** All requests to the `/consumption/query` endpoint provide an immediate response with a job id, along with information about the API request that was submitted. You will still need to request the `/jobs/status` endpoint to get an update on the job submitted and, if completed, the results of the database request. **Please refer to the `/jobs` endpoint documentation for more detail.**
+
+This section outlines how to make requests for data within the ARTIS consumption table. Note that all requests require some kind of filtering criteria, if you would like to request the complete ARTIS consumption data please send an email to [ENTER EMAIL HERE].
+
+A request for the main ARTIS consumption table consists of 4 fields:
+- cols_wanted **(REQUIRED)**: A string containing the names of the columns, comma separated without spaces, used to summarize the ARTIS data you are requesting. Note that all consumption results are returned in live weight equivalent tonnes.
+- start_year **(REQUIRED)**: A year between 1996-2020
+- end_year **(REQUIRED)**: A year between 1996-2020 must be greater than or equal to start_year
+- search_criteria **(REQUIRED)**: Either 1 or 0. 1 notes that additional filtering criteria will be included, 0 notes no filter criteria is required. Note all optional parameters sent will be treated as filtering criteria if search_criteria is set to 1. If search_criteria is set to 0, then all optional parameters will be ignored. 
+
+
+### Examples
+If you wanted to send a request for all ARTIS consumption data summarized by year you would send a GET request to the `/consumption/query` endpoint, with the following parameters:
+
+*Note:* In this request we are NOT performing any filtering on the ARTIS snet (with exception of the start and end years).
+
+```json
+{
+    "cols_wanted": "year",
+    "start_year": 2015,
+    "end_year": 2020,
+    "search_criteria": 0
+}
+```
+The endpoint with parameters would look like this:
+
+`/consumption/query?cols_wanted=year&start_year=2015&end_year=2020&search_criteria=0`
+
+```json
+[
+    {
+        "year": 2015,
+        "consumption_live_t": 150051627.61692697
+    },
+    {
+        "year": 2016,
+        "consumption_live_t": 152188217.6477852
+    },
+    {
+        "year": 2017,
+        "consumption_live_t": 156667487.22123533
+    },
+    {
+        "year": 2018,
+        "consumption_live_t": 162506861.25704896
+    },
+    {
+        "year": 2019,
+        "consumption_live_t": 161828981.64790905
+    },
+    {
+        "year": 2020,
+        "consumption_live_t": 160382274.5401494
+    }
+]
+```
+
+If you wanted to explore consumption of a specific species (salmo salar) in 2019, you would send the following request:
+```json
+{
+    "cols_wanted": "consumer_iso3c,year",
+    "start_year": 2019,
+    "end_year": 2019,
+    "search_criteria": 1,
+    "sciname": "salmo salar"
+}
+```
+
+The final URL would look like this:
+`/consumption/query?cols_wanted=consumer_iso3c,year&start_year=2019&end_year=2019&search_criteria=1&sciname=salmo%20salar`
+
+Here is a sample of the results list that would be returned:
+```json
+[
+    {
+        "consumer_iso3c": "URY",
+        "year": 2019,
+        "consumption_live_t": 1268.9479577486022
+    },
+    {
+        "consumer_iso3c": "USA",
+        "year": 2019,
+        "consumption_live_t": 479888.35767397494
+    },
+    {
+        "consumer_iso3c": "UZB",
+        "year": 2019,
+        "consumption_live_t": 179.3410667585069
+    },
+    {
+        "consumer_iso3c": "VCT",
+        "year": 2019,
+        "consumption_live_t": 98.57772699218599
+    },
+    {
+        "consumer_iso3c": "VEN",
+        "year": 2019,
+        "consumption_live_t": 117.01599593460986
+    },
+    {
+        "consumer_iso3c": "VNM",
+        "year": 2019,
+        "consumption_live_t": 15550.574977568014
+    }
+]
 ```
 ---
 ## Requests for Supplemental data

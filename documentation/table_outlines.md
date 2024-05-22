@@ -29,6 +29,26 @@ Main table linking trade records with production.
 - ***Foreign Export:*** An export where a specific product is imported from a source country and then re-exported by another country.
 - ***Error Export:*** An export that cannot be explained by domestic or foreign export records nor production records.
 
+## Consumption table
+| Column Name | Description |
+| ----------- | ----------- |
+| source_country_iso3c | ISO3C code for the country that produced the specific species |
+| exporter_iso3c | ISO3C code for the country that was the final exporter of the species before it arrived at the consuming country |
+| consumer_iso3c | ISO3C code for the country consuming the species |
+| consumption_source | "domestic" or "foreign", domestic consumption is when the country consumes species it produced itself. Foreign consumption is when a country consumes species imported from another country |
+| year | year 1996-2020 |
+| dom_source | specifies whether trade flow was "domestic" (exporting country produced the good that it is sending to the consuming country) or "foreign" (exporting country imported the good that it is sending to the consuming country) |
+| sciname | species/species group name |
+| sciname_hs_modified | most resolved version of the species/species group name based on the underlying HS code that it was traded under |
+| habitat | production habitat |
+| method | production method |
+| consumption_live_t | consumption in live weight equivalent tonnes |
+
+### Sample Table Entry
+| source_country_iso3c | exporter_iso3c  | consumer_iso3c | consumption_source | year | dom_source | sciname | sciname_hs_modified | habitat | method | consumption_live_t |
+| ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
+| CAN | CAN | USA | foreign | 2020 | domestic | salmo salar | marine | capture | 200.00 |
+| USA | NA | USA | domestic | 2020 | NA | salmo salar | marine | capture | 350.00 |
 
 ---
 
