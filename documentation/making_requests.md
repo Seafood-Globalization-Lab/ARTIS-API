@@ -1,5 +1,8 @@
 # How to make Requests to the ARTIS API
 
+## Permission to use ARTIS API
+All API users require an API key to submit requests to the ARTIS API. **Any requests not containing an API will automatically be rejected.** Please place your API key in the HTTP request header under the name "X-API-KEY".
+
 ## Summary
 <table>
     <tbody>
@@ -28,8 +31,14 @@
         </ul>
         </td>
         <td>
-            List of objects where each object corresponds to a row of with the appropriate raw/filtered/summarized data from the ARTIS database.
+            <li>An ID number corresponding to the job that has been submitted containing your query request.</li>
+            <li>A summary of the data request sent to the endpoint.</li>
         </td>
+    </tr>
+    <tr>
+        <td>GET</td>
+        <td>/job/status</td>
+        <td></td>
     </tr>
     <tr>
         <td>GET</td>
@@ -69,7 +78,63 @@
 
 An indepth review of the API requests and responses is available below.
 
+## Getting updates on jobs that have been submitted
+
+To get an update on jobs that have been submitted send a **GET** request to the `/jobs/status` endpoint.
+
+**Note:** only requests to the `/snet/query`, `/consumption/query`, `/baci/query`, `/production/query` endpoints will generate a job ID. Requests to `/supplemental` endpoints will generate an immediate JSON response with data back to the requester.
+
+A correct request to the `/jobs/status` endpoint consists of 1 query parameter:
+- id **(REQUIRED)**: a job ID number. This job ID was provided by the `/snet/query` endpoint.
+
+A response to the `/jobs/status` endpoint consists of 2 fields:
+- status: a string describing the status of the job submitted. Possible return values include:
+    - completed: Job has been completed.
+    - active: Job is currently being executed.
+    - wait: Job is on the queue and is waiting to be executed by the server.
+    - delayed: Job has been delayed due to current server constraints, and will be submitted into the job queue as soon as possible.
+    - failed: Job has failed. Please review request that has been made and modify as appropriate.
+- results: an array of objects where each object corresponds to a row of results from the query provided. Note, only when the status is "completed" will results be a non-empty array. The specifics as to how each object is structured are outlined below.
+
+Example successful response:
+```json
+{
+    status: "completed",
+    results: [
+        {year: 2018, live_weight_t: 180}
+        {year: 2019, live_weight_t: 250},
+        {year: 2020, live_weight_t: 100}
+    ]
+}
+```
+
+Example job is currently in being executed:
+```json
+{
+    status: "active",
+    results: []
+}
+```
+
+Example job is currently waiting to be executed:
+```json
+{
+    status: "wait",
+    results: []
+}
+```
+
+Example job failed:
+```json
+{
+    status: "failed",
+    results: []
+}
+```
+
 ## Requests for Main ARTIS snet data
+
+Note: ***The `/snet/query` endpoint only submits a job request and will not provide results from the ARTIS seafood trade network table.*** All requests to the `/snet/query` endpoint provide an immediate response with a job id, along with information about the API request that was submitted. You will still need to request the `/jobs/status` endpoint to get an update on the job submitted and if completed the results of the database request. **Please refer to the `/jobs` endpoint documentation for more detail.**
 
 This section outlines how to make requests for data within the ARTIS snet table. Note that all requests require some kind of filtering criteria, if you would like to request the complete ARTIS snet data please send an email to [ENTER EMAIL HERE].
 

@@ -5,7 +5,7 @@ import { pgJobsQ } from '../db';
 const router = Router();
 
 // Return job update
-router.get('/jobUpdate', async (req, res) => {
+router.get('/status', async (req, res) => {
     
     try {
         const requestedId = String(req.query.id);
