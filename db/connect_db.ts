@@ -42,10 +42,24 @@ if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'testing'
 }
 
 if (process.env.NODE_ENV === 'production') {
+    const redis_tls_url = process.env.REDIS_TLS_URL
+    // Get host from redis tls url
+    const host_regex = RegExp("@(.*):")
+    const host_matches = host_regex.exec(redis_tls_url)
+    const hostname = host_matches[1]
+    // Get password from redis tls url
+    const pw_regex = RegExp("\/\/:(.*)@")
+    const pw_matches = pw_regex.exec(redis_tls_url)
+    const pw = pw_matches[1]
+    // Get port from redis tls url
+    const port_regex = RegExp(":([0-9]*)$")
+    const port_matches = port_regex.exec(redis_tls_url)
+    const port = port_matches[1]
+
     redisOptions = {
-        host: String(process.env.REDIS_HOST),
-        port: Number(process.env.REDIS_PORT),
-        password: String(process.env.REDIS_PASSWORD),
+        host: hostname,
+        port: port,
+        password: pw,
         tls: {
             rejectUnauthorized: false
           }
