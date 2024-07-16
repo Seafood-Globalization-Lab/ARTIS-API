@@ -11,7 +11,7 @@ const { Queue } = require('bullmq');
 const ssl = {rejectUnauthorized: false};
 let cn = null;
 // create database connection based on environment variables
-if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV == 'test') {
+if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
     // connection object
     cn = {
         "host": process.env.DB_HOST,

@@ -2,7 +2,7 @@
 export const createSnetQuery = (criteria) => {
 
     // initial query getting built
-    let query = `SELECT ${criteria.colsWanted.join(', ')}, SUM(${criteria.weightType}) AS ${criteria.weightType} FROM snet`;
+    let query = `SELECT ${criteria.colsWanted.join(', ')}, SUM(${criteria.weightType}) AS ${criteria.weightType} FROM test_snet`;
 
     let minYear: number = 1996;
     let maxYear: number = 2020;
