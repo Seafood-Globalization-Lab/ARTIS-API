@@ -42,7 +42,7 @@ if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'testing'
 }
 
 if (process.env.NODE_ENV === 'production') {
-    const redis_tls_url = process.env.REDIS_TLS_URL
+    const redis_tls_url = process.env.REDIS_URL
     // Get host from redis tls url
     const host_regex = RegExp("@(.*):")
     const host_matches = host_regex.exec(redis_tls_url)
