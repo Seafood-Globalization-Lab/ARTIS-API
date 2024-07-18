@@ -1,36 +1,29 @@
-import { snetSchemas } from '../../schemas';
+import { createConsumptionQuery, makePgRequest } from '../../db';
 import { authenticate, validateSchema } from '../../middleware';
-import { createSnetQuery, makePgRequest } from '../../db';
+import { consumptionSchemas } from '../../schemas';
 
 export const GET = authenticate(
-    validateSchema(snetSchemas.queryReq)(async (req) => {
+    validateSchema(consumptionSchemas.queryReq)(async (req) => {
         const query = new URL(req.url).searchParams;
 
         try {
             const colsWanted: string[] = decodeURI(
                 String(query.get('cols_wanted'))
             ).split(',');
-            const weightType: string = String(query.get('weight_type'));
             const filteredSearch: number = parseInt(
                 String(query.get('search_criteria'))
             );
 
             let criteria: any = {
                 colsWanted: colsWanted,
-                weightType: weightType,
                 searchCriteria: {},
             };
 
-            const baseParams: string[] = [
-                'cols_wanted',
-                'weight_type',
-                'search_criteria',
-            ];
+            const baseParams: string[] = ['cols_wanted', 'search_criteria'];
 
             if (filteredSearch === 1) {
                 for (const [key, value] of query.entries()) {
                     // only parse non base parameters for filtering criteria
-                    // iterate over all filtering criteria
                     if (!baseParams.includes(key)) {
                         criteria['searchCriteria'][key] = decodeURI(
                             String(value)
@@ -38,7 +31,6 @@ export const GET = authenticate(
                     }
                 }
 
-                // if a custom hs version year pairing is not provided then a start and end year must be provided
                 if (!('custom_timeline' in criteria.searchCriteria)) {
                     // Get start and end year from requests
                     criteria['searchCriteria']['start_year'] = parseInt(
@@ -58,9 +50,9 @@ export const GET = authenticate(
                 }
             }
 
-            const snetQuery = createSnetQuery(criteria);
+            const consumptionQuery = createConsumptionQuery(criteria);
             // make a request to the postgresSQL database
-            const result = await makePgRequest(snetQuery);
+            const result = await makePgRequest(consumptionQuery);
 
             return new Response(JSON.stringify(result), {
                 headers: { 'Content-Type': 'application/json' },
