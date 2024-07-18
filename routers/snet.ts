@@ -1,11 +1,9 @@
 import { Router } from 'express';
-import { validateSchema } from '../middleware';
-import { snetSchemas } from '../schemas';
 
 // Router to manage all requests involving seafood trade network data
 const router = Router();
 
-router.get('/query', validateSchema(snetSchemas.queryReq), async (req, res) => {
+router.get('/query', async (req, res) => {
     try {
         const colsWanted: string[] = decodeURI(
             String(req.query.cols_wanted)

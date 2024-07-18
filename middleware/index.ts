@@ -1,3 +1,2 @@
-
-export * from './authenticate';
-export * from './schemaValidator';
+export { authenticate } from './authenticate';
+export { validateSchema } from './validateSchema';
