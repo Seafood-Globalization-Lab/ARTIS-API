@@ -1,14 +1,13 @@
-
 // Modules
-import { NextFunction, Request, Response } from 'express';
 import { snetWeightTypes } from '../db';
 import Joi from 'joi';
 
 export const snetSchemas = {
-
     queryReq: Joi.object({
-        cols_wanted: Joi.string().required(),// Joi.array().items(Joi.string().valid(...snetCols)).required(),
-        weight_type: Joi.string().valid(...snetWeightTypes).required(),
+        cols_wanted: Joi.string().required(), // Joi.array().items(Joi.string().valid(...snetCols)).required(),
+        weight_type: Joi.string()
+            .valid(...snetWeightTypes)
+            .required(),
         search_criteria: Joi.number().integer().valid(1, 0).required(),
         exporter_iso3c: Joi.string().optional(),
         importer_iso3c: Joi.string().optional(),
@@ -20,6 +19,6 @@ export const snetSchemas = {
         dom_source: Joi.string().optional(),
         start_year: Joi.number().integer().min(1996).max(2020).optional(),
         end_year: Joi.number().integer().min(1996).max(2020).optional(),
-        custom_timeline: Joi.string().optional()
-    })
-}
+        custom_timeline: Joi.string().optional(),
+    }),
+};

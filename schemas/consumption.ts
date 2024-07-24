@@ -1,10 +1,7 @@
-
 // Modules
-import { NextFunction, Request, Response } from 'express';
 import Joi from 'joi';
 
 export const consumptionSchemas = {
-
     queryReq: Joi.object({
         cols_wanted: Joi.string().required(),
         search_criteria: Joi.number().integer().valid(1, 0).required(),
@@ -17,6 +14,6 @@ export const consumptionSchemas = {
         dom_source: Joi.string().optional(),
         consumption_source: Joi.string().optional(),
         start_year: Joi.number().integer().min(1996).max(2020).required(),
-        end_year: Joi.number().integer().min(1996).max(2020).required()
-    })
-}
+        end_year: Joi.number().integer().min(1996).max(2020).required(),
+    }),
+};
