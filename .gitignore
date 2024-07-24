@@ -8,3 +8,5 @@ coverage/
 dist/
 data/
 .vercel
+.Rproj.user
+*.Rproj
