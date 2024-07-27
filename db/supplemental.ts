@@ -80,7 +80,7 @@ export const scinameCols: string[] = [
 ];
 // Product table columns
 export const productsCols: string[] = [
-    'hs6', 'description', 'parent', 'classification', 'presentation', 'state'
+    'hs6', 'description'
 ]
 // Countries table columns
 export const countriesCols = [
